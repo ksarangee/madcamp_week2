@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  kakao_flutter_sdk: ^1.9.3
+  flutter_webview_plugin: ^0.4.0
   flutter_svg: ^2.0.10+1
   http: ^1.2.1
 
