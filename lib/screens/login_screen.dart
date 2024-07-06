@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -34,7 +33,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   Future<void> _sendUserInfoToServer(User user) async {
     final response = await http.post(
-      Uri.parse('http:///kakao_login'), // 실제 서버 URL로 변경하세요
+      Uri.parse('http://172.10.7.100/kakao_login'), // 실제 서버 URL로 변경하세요
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'kakao_id': user.id,
@@ -169,3 +168,4 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+*/
