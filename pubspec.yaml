@@ -30,10 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  kakao_flutter_sdk: ^1.9.3
-  flutter_webview_plugin: ^0.4.0
   flutter_svg: ^2.0.10+1
   http: ^1.2.1
+  provider: ^6.1.2
+  dio: ^5.5.0+1
+  vector_math: ^2.1.4
+  kakao_flutter_sdk: ^1.9.3
+  google_fonts: ^6.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -61,6 +64,7 @@ flutter:
     - assets/icons/browse_icon.svg
     - assets/icons/home_icon.svg
     - assets/icons/profile_icon.svg
+    - assets/cookie_below.svg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
