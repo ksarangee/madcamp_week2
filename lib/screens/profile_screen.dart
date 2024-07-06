@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     prefs.setStringList('selectedInterests', selectedInterests);
 
     // 서버에 저장할 로직 호출
-    //예시: await _saveInterestsToServer();
+    await _saveInterestsToServer();
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('관심 분야가 저장되었습니다.'),
@@ -41,38 +41,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.of(context).pop(); // 다이얼로그 닫기
   }
 
-  /* 관심 분야 저장 로직 예시:
   Future<void> _saveInterestsToServer() async {
-  // 선택된 관심 분야를 category_id로 변환하는 로직 (예시)
-  List<int> categoryIds = selectedInterests.map((interest) {
-    return interests.indexOf(interest) + 1; // 카테고리 ID는 1부터 시작한다고 가정
-  }).toList();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
+    int? userId = 3; // 임시로 3로 설정
+    if (userId == null) return;
 
-  // 서버로 보낼 데이터 구성
-  var data = json.encode({"categories": categoryIds});
+    final response = await http.post(
+      Uri.parse('http://172.10.7.100/save_interests'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'user_id': userId,
+        'interests': selectedInterests,
+      }),
+    );
 
-  // 서버 요청 URL 설정
-  var url = Uri.parse('https://example.com/api/categories'); // 실제 서버 URL로 변경해야 함
-
-  // POST 요청 보내기
-  var response = await http.post(
-    url,
-    headers: {"Content-Type": "application/json"},
-    body: data,
-  );
-
-  // 서버 응답 확인 (필요 시 오류 처리)
-  if (response.statusCode == 200) {
-    // 저장 성공
-  } else {
-    // 오류 처리
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('관심 분야 저장에 실패했습니다.'),
-    ));
+    if (response.statusCode == 200) {
+      print('Interests saved successfully');
+    } else {
+      print('Failed to save interests');
+    }
   }
-}
-
-  */
 
   void _toggleInterest(List<String> tempSelectedInterests, String interest) {
     setState(() {
