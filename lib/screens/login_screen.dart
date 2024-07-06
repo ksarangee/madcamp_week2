@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:flutter/services.dart'; // 이 줄을 추가하여 PlatformException을 사용 가능하게 함
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,10 +22,30 @@ class _LoginScreenState extends State<LoginScreen> {
           '\n회원번호: ${user.id}'
           '\n닉네임: ${user.kakaoAccount?.profile?.nickname}'
           '\n이메일: ${user.kakaoAccount?.email}');
+      await _sendUserInfoToServer(user);
+      print('사용자 정보 서버 전송 성공');
       // 로그인 성공 시 홈 화면으로 이동
       Navigator.pushReplacementNamed(context, '/home');
+      print('홈 화면으로 이동');
     } catch (error) {
       print('사용자 정보 요청 실패 $error');
+    }
+  }
+
+  Future<void> _sendUserInfoToServer(User user) async {
+    final response = await http.post(
+      Uri.parse('http:///kakao_login'), // 실제 서버 URL로 변경하세요
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'kakao_id': user.id,
+        'nickname': user.kakaoAccount?.profile?.nickname,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to send user info to server');
+    } else {
+      print('서버 응답: ${response.body}');
     }
   }
 
@@ -34,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = true;
         });
         await UserApi.instance.loginWithKakaoTalk();
-        await _afterSuccess();
         print('카카오톡으로 로그인 성공');
+        await _afterSuccess();
       } catch (error) {
         print('카카오톡으로 로그인 실패 $error');
         if (error is PlatformException && error.code == 'CANCELED') {
@@ -46,8 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         try {
           await UserApi.instance.loginWithKakaoAccount();
-          await _afterSuccess();
           print('카카오계정으로 로그인 성공');
+          await _afterSuccess();
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
         }
@@ -58,8 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
           _isLoading = true;
         });
         await UserApi.instance.loginWithKakaoAccount();
-        await _afterSuccess();
         print('카카오계정으로 로그인 성공');
+        await _afterSuccess();
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
       }
