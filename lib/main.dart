@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'secret.dart';
 import 'screens/login_screen.dart';
 import 'screens/browse_screen.dart';
 import 'screens/home_screen.dart';
@@ -8,7 +9,7 @@ import 'screens/profile_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  KakaoSdk.init(nativeAppKey: 'e5de5edda8f0c9c2267ec351344faa2a');
+  KakaoSdk.init(nativeAppKey: kakaoApiKey);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.black,
     statusBarBrightness: Brightness.dark,
