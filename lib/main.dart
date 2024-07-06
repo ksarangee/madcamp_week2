@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'secret.dart';
 import 'screens/login_screen.dart';
 import 'screens/browse_screen.dart';
 import 'screens/home_screen.dart';
@@ -8,10 +9,10 @@ import 'screens/profile_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  KakaoSdk.init(nativeAppKey: ''); // 여기서 API 키 사용
+  KakaoSdk.init(nativeAppKey: kakaoApiKey);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.black, // Set status bar color to black
-    statusBarBrightness: Brightness.dark, // Set status bar icons to be dark
+    statusBarColor: Colors.black,
+    statusBarBrightness: Brightness.dark,
   ));
   runApp(const MyApp());
 }
