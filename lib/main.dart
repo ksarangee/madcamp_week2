@@ -11,6 +11,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(nativeAppKey: kakaoApiKey);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.black,
@@ -21,9 +23,17 @@ void main() async {
   bool isLoggedIn = prefs.getString('accessToken') != null;
 
   runApp(MyApp(isLoggedIn: isLoggedIn));
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getString('accessToken') != null;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
   final bool isLoggedIn;
 
   const MyApp({super.key, required this.isLoggedIn});
