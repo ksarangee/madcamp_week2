@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';  // shared_preferences 패키지 임포트
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,15 +17,18 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
-  Future<void> _afterSuccess() async {
+  Future<void> _afterSuccess(OAuthToken token) async {
     try {
       User user = await UserApi.instance.me();
       print('사용자 정보 요청 성공'
           '\n회원번호: ${user.id}'
           '\n닉네임: ${user.kakaoAccount?.profile?.nickname}'
           '\n이메일: ${user.kakaoAccount?.email}');
+      
+      await _saveToken(token);  // 토큰 저장
       await _sendUserInfoToServer(user);
       print('사용자 정보 서버 전송 성공');
+      
       // 로그인 성공 시 홈 화면으로 이동
       Navigator.pushReplacementNamed(context, '/home');
       print('홈 화면으로 이동');
@@ -33,13 +37,21 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _saveToken(OAuthToken token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('accessToken', token.accessToken);
+    // refreshToken이 null일 경우 빈 문자열을 기본값으로 사용
+    await prefs.setString('refreshToken', token.refreshToken ?? '');
+    print('토큰 저장 성공');
+  }
+
   Future<void> _sendUserInfoToServer(User user) async {
     final response = await http.post(
-      Uri.parse('$backendUrl/kakao_login'), // 실제 서버 URL로 변경하세요
+      Uri.parse('$backendUrl/kakao_login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'kakao_id': user.id,
-        'nickname': user.kakaoAccount?.profile?.nickname,
+        'kakao_id': user.id.toString(),  // String?을 String으로 변환
+        'nickname': user.kakaoAccount?.profile?.nickname ?? 'Unknown',  // String?을 String으로 변환
       }),
     );
 
@@ -56,9 +68,9 @@ class LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoading = true;
         });
-        await UserApi.instance.loginWithKakaoTalk();
+        OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         print('카카오톡으로 로그인 성공');
-        await _afterSuccess();
+        await _afterSuccess(token);
       } catch (error) {
         print('카카오톡으로 로그인 실패 $error');
         if (error is PlatformException && error.code == 'CANCELED') {
@@ -68,9 +80,9 @@ class LoginScreenState extends State<LoginScreen> {
           return;
         }
         try {
-          await UserApi.instance.loginWithKakaoAccount();
+          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
           print('카카오계정으로 로그인 성공');
-          await _afterSuccess();
+          await _afterSuccess(token);
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
         }
@@ -80,9 +92,9 @@ class LoginScreenState extends State<LoginScreen> {
         setState(() {
           _isLoading = true;
         });
-        await UserApi.instance.loginWithKakaoAccount();
+        OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
         print('카카오계정으로 로그인 성공');
-        await _afterSuccess();
+        await _afterSuccess(token);
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
       }

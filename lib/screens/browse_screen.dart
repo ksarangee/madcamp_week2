@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_application_1/secret.dart';
+import '../secret.dart';  // secret.dart 파일을 임포트합니다.
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -15,8 +15,10 @@ class BrowseScreenState extends State<BrowseScreen> {
   static const String endpoint = '/posts'; // 서버 엔드포인트 경로
 
   Future<List<Document>> _fetchDocuments() async {
-    final response =
-        await http.get(Uri.parse('$backendUrl:$serverPort$endpoint'));
+    final response = await http.get(Uri.parse('$backendUrl:$serverPort$endpoint'));
+
+    print('Server Response: ${response.statusCode}');
+    print('Response Body: ${response.body}');
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
@@ -36,6 +38,7 @@ class BrowseScreenState extends State<BrowseScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator()); // 로딩 중 화면
           } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
             return Center(
                 child: Text('Error: ${snapshot.error}')); // 데이터 로딩 중 에러 발생 시 화면
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -139,12 +142,12 @@ class Document {
 
   factory Document.fromJson(Map<String, dynamic> json) {
     return Document(
-      id: json['id'],
-      userId: json['user_id'],
-      title: json['title'],
-      content: json['content'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      id: json['id'] ?? 0,
+      userId: json['user_id'] ?? 'Unknown',
+      title: json['title'] ?? 'No Title',
+      content: json['content'] ?? 'No Content',
+      createdAt: json['created_at'] ?? 'Unknown',
+      updatedAt: json['updated_at'] ?? 'Unknown',
     );
   }
 }
