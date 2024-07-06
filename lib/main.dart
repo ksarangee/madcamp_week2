@@ -69,12 +69,29 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _logout() async {
+    try {
+      await UserApi.instance.unlink();  // 카카오 연결 해제
+    } catch (error) {
+      print('카카오 연결 해제 실패: $error');
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();  // 저장된 모든 데이터 초기화
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(widget.title, style: const TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: _logout,
+          ),
+        ],
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

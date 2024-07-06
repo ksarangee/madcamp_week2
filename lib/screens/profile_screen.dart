@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';  // 카카오 SDK 임포트
 import 'package:http/http.dart' as http; // http 패키지 추가
 import 'dart:convert'; // json 디코딩을 위해 추가
 
@@ -84,6 +85,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _logout(BuildContext context) async {
+    try {
+      await UserApi.instance.unlink();  // 카카오 연결 해제
+    } catch (error) {
+      print('카카오 연결 해제 실패: $error');
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();  // 모든 저장된 데이터 초기화
     Navigator.pushReplacementNamed(context, '/login');
