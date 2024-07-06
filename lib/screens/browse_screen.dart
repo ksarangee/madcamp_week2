@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_application_1/secret.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -10,13 +11,12 @@ class BrowseScreen extends StatefulWidget {
 }
 
 class BrowseScreenState extends State<BrowseScreen> {
-  static const String serverUrl = 'http://172.10.7.100'; // 실제 서버 주소
   static const String serverPort = '80'; // 서버 포트 번호
   static const String endpoint = '/posts'; // 서버 엔드포인트 경로
 
   Future<List<Document>> _fetchDocuments() async {
     final response =
-        await http.get(Uri.parse('$serverUrl:$serverPort$endpoint'));
+        await http.get(Uri.parse('$backendUrl:$serverPort$endpoint'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);

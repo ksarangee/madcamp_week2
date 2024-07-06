@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'secret.dart';
+import 'secret.dart';  // secret.dart 파일을 임포트합니다.
 import 'screens/login_screen.dart';
 import 'screens/browse_screen.dart';
 import 'screens/home_screen.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/secret.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,7 +35,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   Future<void> _sendUserInfoToServer(User user) async {
     final response = await http.post(
-      Uri.parse('http:///kakao_login'), // 실제 서버 URL로 변경하세요
+      Uri.parse('$backendUrl/kakao_login'), // 실제 서버 URL로 변경하세요
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'kakao_id': user.id,
