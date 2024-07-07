@@ -11,18 +11,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(nativeAppKey: kakaoApiKey);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.black,
     statusBarBrightness: Brightness.dark,
   ));
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getString('accessToken') != null;
-
-  runApp(MyApp(isLoggedIn: isLoggedIn));
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getString('accessToken') != null;
@@ -34,16 +27,15 @@ class MyApp extends StatelessWidget {
   final bool isLoggedIn;
 
   const MyApp({super.key, required this.isLoggedIn});
-  final bool isLoggedIn;
-
-  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        fontFamily: "IBMPlexSansKR",
+        primaryColor: Colors.black,
+        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
       /*initialRoute: isLoggedIn ? '/home' : '/login',

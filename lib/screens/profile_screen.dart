@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-<<<<<<< HEAD
 import 'package:http/http.dart' as http; // http 패키지 추가
 import 'dart:convert'; // json 디코딩을 위해 추가
-=======
->>>>>>> 1d2ad0f1b7ef70acd7c2b04c538a476f7270c244
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -94,17 +91,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ));
   }
 
-  Future<void> _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();  // 모든 저장된 데이터 초기화
-    Navigator.pushReplacementNamed(context, '/login');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
         title: const Text('프로필'),
       ),
       body: ListView(
@@ -201,15 +191,6 @@ class LikedPostsScreen extends StatelessWidget {
             title: Text(likedPosts[index]),
           );
         },
-=======
-        title: Text('Profile'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => _logout(context),
-          child: Text('Logout'),
-        ),
->>>>>>> 1d2ad0f1b7ef70acd7c2b04c538a476f7270c244
       ),
     );
   }
