@@ -63,12 +63,10 @@ class BrowseScreenState extends State<BrowseScreen> {
         _filteredDocuments = _allDocuments.where((doc) {
           if (_searchByTitle) {
             // 제목으로 검색할 경우
-            return doc.title?.toLowerCase().contains(query.toLowerCase()) ??
-                false;
+            return doc.title?.toLowerCase().contains(query.toLowerCase()) ?? false;
           } else {
             // 내용으로 검색할 경우
-            return doc.content?.toLowerCase().contains(query.toLowerCase()) ??
-                false;
+            return doc.content?.toLowerCase().contains(query.toLowerCase()) ?? false;
           }
         }).toList();
       }
@@ -154,25 +152,8 @@ class BrowseScreenState extends State<BrowseScreen> {
         itemBuilder: (context, index) {
           final document = _filteredDocuments[index];
           return ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(document.title ?? '',
-                    style: const TextStyle(fontSize: 18.0)),
-                const SizedBox(height: 4.0),
-                Row(
-                  children: [
-                    Text('User: ${document.userId}',
-                        style: const TextStyle(fontSize: 14.0)),
-                    const Spacer(),
-                    Text('Created: ${document.createdAt}',
-                        style: const TextStyle(fontSize: 14.0)),
-                    Text('  Updated: ${document.updatedAt}',
-                        style: const TextStyle(fontSize: 14.0)),
-                  ],
-                ),
-              ],
-            ),
+            title: Text(document.title ?? '',
+                style: const TextStyle(fontSize: 18.0)),
             onTap: () {
               Navigator.push(
                 context,
@@ -205,18 +186,14 @@ class DocumentDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('User: ${document.userId}',
-                style: const TextStyle(fontSize: 16.0)),
-            const SizedBox(height: 8.0),
+            if (document.imageUrl != null)
+              Center(
+                child: Image.network(document.imageUrl!), // 이미지 URL이 있으면 이미지를 보여줍니다.
+              ),
+            const SizedBox(height: 16.0),
             Text(document.content ?? '', style: const TextStyle(fontSize: 18.0)),
             const SizedBox(height: 16.0),
-            Row(
-              children: [
-                Text('Created at: ${document.createdAt}'),
-                const Spacer(),
-                Text('Updated at: ${document.updatedAt}'),
-              ],
-            ),
+            Text('Updated at: ${document.updatedAt}', style: const TextStyle(fontSize: 14.0)),
           ],
         ),
       ),
@@ -226,7 +203,7 @@ class DocumentDetailScreen extends StatelessWidget {
 
 class Document {
   final int id;
-  final String userId;
+  final String? imageUrl;
   final String title;
   final String content;
   final String createdAt;
@@ -234,7 +211,7 @@ class Document {
 
   Document({
     required this.id,
-    required this.userId,
+    this.imageUrl,
     required this.title,
     required this.content,
     required this.createdAt,
@@ -244,7 +221,7 @@ class Document {
   factory Document.fromJson(Map<String, dynamic> json) {
     return Document(
       id: json['id'] ?? 0,
-      userId: json['user_id'] ?? 'Unknown',
+      imageUrl: json['image'] ?? '',
       title: json['title'] ?? 'No Title',
       content: json['content'] ?? 'No Content',
       createdAt: json['created_at'] ?? 'Unknown',
