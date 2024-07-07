@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './../secret.dart';
+import '../models/document.dart';
+import 'document_detail_screen.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -31,26 +33,29 @@ class BrowseScreenState extends State<BrowseScreen> {
 
   Future<void> _fetchDocuments() async {
     try {
-      final response = await http.get(Uri.parse('$backendUrl:$serverPort$endpoint'));
+      final response =
+          await http.get(Uri.parse('$backendUrl:$serverPort$endpoint'));
 
       print('Server Response: ${response.statusCode}');
       print('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _allDocuments = data.map((doc) => Document.fromJson(doc)).toList();
-          _filteredDocuments = _allDocuments; // 초기에는 모든 문서를 보여줌
-          _isLoading = false; // 데이터 로딩 완료
-        });
+
+        // mounted 체크 추가
+        if (mounted) {
+          setState(() {
+            _allDocuments = data.map((doc) => Document.fromJson(doc)).toList();
+            _filteredDocuments = _allDocuments; // 초기에는 모든 문서를 보여줌
+            _isLoading = false; // 데이터 로딩 완료
+          });
+        }
       } else {
         throw Exception('Failed to load documents');
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: $e'; // 데이터 로딩 실패 시 에러 메시지 저장
-        _isLoading = false; // 데이터 로딩 완료
-      });
+      print('Error: $e');
+      // 에러 처리 로직 추가
     }
   }
 
@@ -63,10 +68,11 @@ class BrowseScreenState extends State<BrowseScreen> {
         _filteredDocuments = _allDocuments.where((doc) {
           if (_searchByTitle) {
             // 제목으로 검색할 경우
-            return doc.title?.toLowerCase().contains(query.toLowerCase()) ?? false;
+            return doc.title.toLowerCase().contains(query.toLowerCase());
           } else {
             // 내용으로 검색할 경우
-            return doc.content?.toLowerCase().contains(query.toLowerCase()) ?? false;
+            return doc.content != true &&
+                doc.content.toLowerCase().contains(query.toLowerCase());
           }
         }).toList();
       }
@@ -158,8 +164,7 @@ class BrowseScreenState extends State<BrowseScreen> {
         itemBuilder: (context, index) {
           final document = _filteredDocuments[index];
           return ListTile(
-            title: Text(document.title ?? '',
-                style: const TextStyle(fontSize: 18.0)),
+            title: Text(document.title, style: const TextStyle(fontSize: 18.0)),
             onTap: () {
               Navigator.push(
                 context,
@@ -173,65 +178,5 @@ class BrowseScreenState extends State<BrowseScreen> {
         },
       );
     }
-  }
-}
-
-class DocumentDetailScreen extends StatelessWidget {
-  final Document document;
-
-  const DocumentDetailScreen({super.key, required this.document});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(document.title ?? ''),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (document.imageUrl != null)
-              Center(
-                child: Image.network(document.imageUrl!), // 이미지 URL이 있으면 이미지를 보여줍니다.
-              ),
-            const SizedBox(height: 16.0),
-            Text(document.content ?? '', style: const TextStyle(fontSize: 18.0)),
-            const SizedBox(height: 16.0),
-            Text('Updated at: ${document.updatedAt}', style: const TextStyle(fontSize: 14.0)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Document {
-  final int id;
-  final String? imageUrl;
-  final String title;
-  final String content;
-  final String createdAt;
-  final String updatedAt;
-
-  Document({
-    required this.id,
-    this.imageUrl,
-    required this.title,
-    required this.content,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  factory Document.fromJson(Map<String, dynamic> json) {
-    return Document(
-      id: json['id'] ?? 0,
-      imageUrl: json['image'] ?? '',
-      title: json['title'] ?? 'No Title',
-      content: json['content'] ?? 'No Content',
-      createdAt: json['created_at'] ?? 'Unknown',
-      updatedAt: json['updated_at'] ?? 'Unknown',
-    );
   }
 }

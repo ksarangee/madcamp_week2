@@ -5,7 +5,8 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color? backgroundColor;
   final Color? textColor;
-  final IconData? icon; // 아이콘을 위한 속성 추가
+  final IconData? icon;
+  final VoidCallback? iconOnPressed;
 
   const CustomButton({
     super.key,
@@ -14,6 +15,7 @@ class CustomButton extends StatelessWidget {
     this.backgroundColor,
     this.textColor,
     this.icon,
+    this.iconOnPressed,
   });
 
   @override
@@ -31,12 +33,16 @@ class CustomButton extends StatelessWidget {
           padding: EdgeInsets.zero,
         ),
         child: Center(
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon, color: textColor ?? Colors.white),
-                const SizedBox(width: 8), // 아이콘과 텍스트 사이의 간격
+                IconButton(
+                  icon: Icon(icon),
+                  onPressed: iconOnPressed ?? onPressed,
+                  color: textColor ?? Colors.white,
+                ),
+                const SizedBox(height: 8), // 아이콘과 텍스트 사이의 간격
               ],
               Text(
                 text,
