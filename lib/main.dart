@@ -17,23 +17,28 @@ void main() async {
     statusBarBrightness: Brightness.dark,
   ));
 
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getString('accessToken') != null;
+
   // SharedPreferences prefs = await SharedPreferences.getInstance();
   // bool isLoggedIn = prefs.getString('accessToken') != null;
 
-  runApp(MyApp());
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  // final bool isLoggedIn;
+  final bool isLoggedIn;
 
-  const MyApp({super.key});
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        fontFamily: "IBMPlexSansKR",
+        primaryColor: Colors.black,
+        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
       initialRoute: '/home', // 초기 경로를 홈으로 설정

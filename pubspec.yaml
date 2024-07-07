@@ -72,26 +72,23 @@ flutter:
   uses-material-design: true
   
   fonts:
-    - family: NotoSansKR
+    - family: IBMPlexSansKR
       fonts:
-        - asset: assets/fonts/NotoSansKR-Thin.ttf
+        - asset: assets/fonts/IBMPlexSansKR-Thin.ttf
           weight: 100
-        - asset: assets/fonts/NotoSansKR-ExtraLight.ttf
+        - asset: assets/fonts/IBMPlexSansKR-ExtraLight.ttf
           weight: 200
-        - asset: assets/fonts/NotoSansKR-Light.ttf
+        - asset: assets/fonts/IBMPlexSansKR-Light.ttf
           weight: 300
-        - asset: assets/fonts/NotoSansKR-Regular.ttf
+        - asset: assets/fonts/IBMPlexSansKR-Regular.ttf
           weight: 400
-        - asset: assets/fonts/NotoSansKR-Medium.ttf
+        - asset: assets/fonts/IBMPlexSansKR-Medium.ttf
           weight: 500
-        - asset: assets/fonts/NotoSansKR-SemiBold.ttf
+        - asset: assets/fonts/IBMPlexSansKR-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/NotoSansKR-Bold.ttf
+        - asset: assets/fonts/IBMPlexSansKR-Bold.ttf
           weight: 700
-        - asset: assets/fonts/NotoSansKR-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/NotoSansKR-Black.ttf
-          weight: 900
+        
 
   # To add assets to your application, add an assets section, like this:
   # assets:

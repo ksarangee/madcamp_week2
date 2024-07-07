@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../secret.dart';  // secret.dart 파일을 임포트합니다.
+import './../secret.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -97,11 +97,14 @@ class BrowseScreenState extends State<BrowseScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    child: const Text('제목'),
+                    child: Text(
+                      '제목',
+                      style: TextStyle(color: Colors.black),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _searchByTitle
                           ? Colors.brown[300]
-                          : Colors.yellow[200],
+                          : Colors.yellow[100],
                     ),
                     onPressed: () {
                       setState(() {
@@ -112,11 +115,14 @@ class BrowseScreenState extends State<BrowseScreen> {
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
-                    child: const Text('내용'),
+                    child: Text(
+                      '내용',
+                      style: TextStyle(color: Colors.black),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: !_searchByTitle
                           ? Colors.brown[300]
-                          : Colors.yellow[200],
+                          : Colors.yellow[100],
                     ),
                     onPressed: () {
                       setState(() {
