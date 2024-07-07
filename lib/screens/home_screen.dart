@@ -118,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     CustomButton(
                       text: 'Random',
                       onPressed: () => RandomService.performAction(context),
+                      icon: Icons.refresh,
                     ),
                   ],
                 ),

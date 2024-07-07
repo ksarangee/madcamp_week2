@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'secret.dart'; // secret.dart 파일을 임포트합니다.
-//import 'screens/login_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/browse_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/profile_screen.dart';
@@ -19,6 +19,9 @@ void main() async {
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getString('accessToken') != null;
+
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // bool isLoggedIn = prefs.getString('accessToken') != null;
 
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
@@ -38,18 +41,19 @@ class MyApp extends StatelessWidget {
         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
-      /*initialRoute: isLoggedIn ? '/home' : '/login',
+      initialRoute: '/home', // 초기 경로를 홈으로 설정
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
-      },*/
-      home: const MyHomePage(),
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -70,9 +74,30 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _logout() async {
+    try {
+      await UserApi.instance.unlink();  // 카카오 연결 해제
+    } catch (error) {
+      print('카카오 연결 해제 실패: $error');
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();  // 저장된 모든 데이터 초기화
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(widget.title, style: const TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: _logout,
+          ),
+        ],
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
