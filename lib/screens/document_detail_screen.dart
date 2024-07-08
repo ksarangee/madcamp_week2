@@ -23,7 +23,8 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   bool hasDisliked = false;
   List<String> comments = [];
   TextEditingController commentController = TextEditingController();
-  bool _isLoading = true; // 로딩 상태를 나타내는 변수
+  bool _isLoading = true;  // 로딩 상태를 나타내는 변수
+  final int userId = 3; // 실제 사용자 ID로 대체
 
   @override
   void initState() {
@@ -47,6 +48,12 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  @override
+  void dispose() {
+    commentController.dispose();
+    super.dispose();
   }
 
   // 서버에서 조회수 증가시키기
@@ -80,9 +87,11 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        setState(() {
-          _document = Document.fromJson(data);
-        });
+        if (mounted) {
+          setState(() {
+            _document = Document.fromJson(data);
+          });
+        }
       } else {
         // 에러 처리
         print('Failed to fetch document');
@@ -92,11 +101,11 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     }
   }
 
-  // 서버에서 현재 좋아요/싫어요 수 가져오기
+  // 서버에서 현재 좋아요/싫어요 수 및 사용자 반응 가져오기
   Future<void> _fetchReactions() async {
     try {
       final response = await http.get(
-        Uri.parse('$backendUrl/reactions/${_document.id}'),
+        Uri.parse('$backendUrl/reactions/${_document.id}/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -104,12 +113,14 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        setState(() {
-          likes = data['likes'];
-          dislikes = data['dislikes'];
-          hasLiked = data['user_reaction'] == 'like';
-          hasDisliked = data['user_reaction'] == 'dislike';
-        });
+        if (mounted) {
+          setState(() {
+            likes = data['likes'];
+            dislikes = data['dislikes'];
+            hasLiked = data['user_reaction'] == 'like';
+            hasDisliked = data['user_reaction'] == 'dislike';
+          });
+        }
       } else {
         // 에러 처리
         print('Failed to fetch reactions');
@@ -131,10 +142,12 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        setState(() {
-          comments =
-              List<String>.from(data.map((comment) => comment['comment_text']));
-        });
+        if (mounted) {
+          setState(() {
+            comments =
+                List<String>.from(data.map((comment) => comment['comment_text']));
+          });
+        }
       } else {
         // 에러 처리
         print('Failed to fetch comments');
@@ -165,21 +178,23 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         },
         body: jsonEncode(<String, dynamic>{
           'post_id': _document.id,
-          'user_id': 3, // 실제 사용자 ID로 대체
+          'user_id': userId,
           'content': reaction,
         }),
       );
 
       if (response.statusCode == 200) {
-        setState(() {
-          if (reaction == 'like') {
-            hasLiked = false;
-            likes--;
-          } else if (reaction == 'dislike') {
-            hasDisliked = false;
-            dislikes--;
-          }
-        });
+        if (mounted) {
+          setState(() {
+            if (reaction == 'like') {
+              hasLiked = false;
+              likes--;
+            } else if (reaction == 'dislike') {
+              hasDisliked = false;
+              dislikes--;
+            }
+          });
+        }
       } else {
         // 에러 처리
         print('Failed to remove reaction');
@@ -198,23 +213,25 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         },
         body: jsonEncode(<String, dynamic>{
           'post_id': _document.id,
-          'user_id': 3, // 실제 사용자 ID로 대체
+          'user_id': userId,
           'content': reaction,
         }),
       );
 
       if (response.statusCode == 200) {
-        setState(() {
-          if (reaction == 'like') {
-            hasLiked = true;
-            hasDisliked = false;
-            likes++;
-          } else if (reaction == 'dislike') {
-            hasLiked = false;
-            hasDisliked = true;
-            dislikes++;
-          }
-        });
+        if (mounted) {
+          setState(() {
+            if (reaction == 'like') {
+              hasLiked = true;
+              hasDisliked = false;
+              likes++;
+            } else if (reaction == 'dislike') {
+              hasLiked = false;
+              hasDisliked = true;
+              dislikes++;
+            }
+          });
+        }
       } else {
         // 에러 처리
         print('Failed to react to post');
@@ -235,7 +252,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         },
         body: jsonEncode(<String, dynamic>{
           'post_id': _document.id,
-          'user_id': 3, // 실제 사용자 ID로 대체
+          'user_id': userId,
           'content': commentController.text,
         }),
       );

@@ -21,16 +21,14 @@ class Document {
 
   factory Document.fromJson(Map<String, dynamic> json) {
     return Document(
-      id: json['id'] ?? 0,
-      imageUrl: json['image'] ?? '',
-      title: json['title'] ?? 'No Title',
-      content: json['content'] ?? 'No Content',
-      createdAt: json['created_at'] ?? 'Unknown',
-      updatedAt: json['updated_at'] ?? 'Unknown',
-      todayViews: json['today_views'] ??
-          0, // JSON에서 'today_views' 필드를 가져와서 todayViews에 할당
-      categoryId:
-          json['category_id'] ?? 0, //JSON에서 'category'필드 가져와서 categoryId에 할당
+      id: json['id'],
+      title: json['title'],
+      content: json['content'],
+      imageUrl: json['image'], // imageUrl은 null일 수 있음
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
+      todayViews: json['today_views'] ?? 0, // 기본값 0 설정
+      categoryId: json['category_id'] ?? 0,
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';  // 카카오 SDK 임포트
 import 'package:http/http.dart' as http; // http 패키지 추가
 import 'dart:convert'; // json 디코딩을 위해 추가
+import '../models/document.dart';
+import 'document_detail_screen.dart'; // DocumentDetailScreen 임포트
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -169,14 +171,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-class LikedPostsScreen extends StatelessWidget {
+class LikedPostsScreen extends StatefulWidget {
   const LikedPostsScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    List<String> likedPosts = [];
-    // 서버에서 좋아요한 글 목록을 받아오는 로직을 구현해야함
+  _LikedPostsScreenState createState() => _LikedPostsScreenState();
+}
 
+class _LikedPostsScreenState extends State<LikedPostsScreen> {
+  List<Map<String, dynamic>> likedPosts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLikedPosts();
+  }
+
+  Future<void> _fetchLikedPosts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = 3; // 임시로 3으로 설정, 실제로는 SharedPreferences에서 가져옴
+    if (userId == null) return;
+
+    final response = await http.get(
+      Uri.parse('http://172.10.7.100/liked_posts/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      setState(() {
+        likedPosts = List<Map<String, dynamic>>.from(data.map((post) => {
+          'id': post['id'],
+          'title': post['title'],
+          'content': post['content'],
+          'image': post['image'] ?? '', // null 값 처리
+          'category_id': post['category_id'] ?? 0, // null 값 처리
+          'created_at': post['created_at'] ?? '', // null 값 처리
+          'updated_at': post['updated_at'] ?? '', // null 값 처리
+          'today_views': post['today_views'] ?? 0, // null 값 처리
+        }));
+      });
+    } else {
+      print('Failed to fetch liked posts');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('내가 좋아요 한 글'),
@@ -185,7 +228,28 @@ class LikedPostsScreen extends StatelessWidget {
         itemCount: likedPosts.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(likedPosts[index]),
+            title: Text(likedPosts[index]['title']),
+            subtitle: Text(likedPosts[index]['content']),
+            onTap: () {
+              // DocumentDetailScreen으로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DocumentDetailScreen(
+                    document: Document(
+                      id: likedPosts[index]['id'],
+                      title: likedPosts[index]['title'],
+                      content: likedPosts[index]['content'],
+                      imageUrl: likedPosts[index]['image'],
+                      createdAt: likedPosts[index]['created_at'],
+                      updatedAt: likedPosts[index]['updated_at'],
+                      todayViews: likedPosts[index]['today_views'],
+                      categoryId: likedPosts[index]['category_id'],
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
