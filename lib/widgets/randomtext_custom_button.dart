@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class RandomtextCustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final Color? backgroundColor;
@@ -8,7 +8,7 @@ class CustomButton extends StatelessWidget {
   final IconData? icon;
   final VoidCallback? iconOnPressed;
 
-  const CustomButton({
+  const RandomtextCustomButton({
     super.key,
     required this.text,
     required this.onPressed,
@@ -26,7 +26,7 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
+          backgroundColor: Color(0xFF6B95B0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),

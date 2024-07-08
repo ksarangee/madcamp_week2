@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import '../widgets/custom_button.dart';
-import '../services/trend_service.dart';
-import '../services/interest_service.dart';
+import '../widgets/trend_custom_button.dart';
+import '../widgets/interest_custom_button.dart';
+import '../widgets/todaytext_custom_button.dart';
+import '../widgets/randomtext_custom_button.dart';
 import '../secret.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/document.dart';
 import '../screens/document_detail_screen.dart';
-import '../screens/trend_screen.dart'; // Import TrendScreen
 import '../screens/interest_posts_screen.dart';
+import '../screens/trend_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +22,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   Document? fixedDocument;
   Document? randomDocument;
   String fixedDocumentTitle = 'Loading...';
@@ -193,102 +197,104 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      backgroundColor: Color(0xFFFFF6E9),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              SizedBox(
-                height: 100,
-                child: AnimatedOpacity(
-                  opacity: isVisible ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 500),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        quotes[currentQuoteIndex]['quote']!,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        quotes[currentQuoteIndex]['author']!,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  children: [
-                    CustomButton(
-                      text: 'Trending\nPosts',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const TrendScreen(), // Navigate to TrendScreen
-                          ),
-                        );
-                      },
-                    ),
-                    CustomButton(
-                      text: 'My\nInterests',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InterestPostsScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    CustomButton(
-                      text: 'Today\'s Text \n $fixedDocumentTitle',
-                      onPressed: () => _fetchFixedDocument(),
-                    ),
-                    CustomButton(
-                      text: randomDocumentTitle,
-                      onPressed: () {
-                        if (randomDocument != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DocumentDetailScreen(
-                                  document: randomDocument!),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 100,
+                    child: AnimatedOpacity(
+                      opacity: isVisible ? 1.0 : 0.0,
+                      duration: Duration(milliseconds: 500),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            quotes[currentQuoteIndex]['quote']!,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
                             ),
-                          );
-                        }
-                      },
-                      icon: Icons.refresh,
-                      iconOnPressed: _fetchRandomDocument,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            quotes[currentQuoteIndex]['author']!,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 30),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      children: [
+                        TrendCustomButton(
+                          text: 'Trending\nPosts',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TrendScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        InterestCustomButton(
+                          text: 'My\nInterests',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InterestPostsScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        TodaytextCustomButton(
+                          text: 'Today\'s Text \n $fixedDocumentTitle',
+                          onPressed: () => _fetchFixedDocument(),
+                        ),
+                        RandomtextCustomButton(
+                          text: randomDocumentTitle,
+                          onPressed: () {
+                            if (randomDocument != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DocumentDetailScreen(
+                                    document: randomDocument!,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icons.refresh,
+                          iconOnPressed: _fetchRandomDocument,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

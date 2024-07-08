@@ -75,8 +75,7 @@ class BrowseScreenState extends State<BrowseScreen> {
             return doc.title.toLowerCase().contains(query.toLowerCase());
           } else {
             // 내용으로 검색할 경우
-            return doc.content != true &&
-                doc.content.toLowerCase().contains(query.toLowerCase());
+            return doc.content.toLowerCase().contains(query.toLowerCase());
           }
         }).toList();
       }
@@ -86,80 +85,117 @@ class BrowseScreenState extends State<BrowseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 5.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: const InputDecoration(
-                    labelText: 'Search',
-                    suffixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: _filterDocuments, // 검색어 입력 변화 감지
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Color(0xFFFFF6E9), // 배경색을 하얀색으로 설정
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 7.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ElevatedButton(
-                    child: Text(
-                      '제목',
-                      style: TextStyle(color: Colors.black),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xFFE9DECD)),
+                        borderRadius: BorderRadius.circular(40.0),
+                        color: Colors.white,
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          labelText: 'Search',
+                          suffixIcon: Icon(Icons.search),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 6.0),
+                          isDense: true,
+                        ),
+                        onChanged: _filterDocuments, // 검색어 입력 변화 감지
+                      ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _searchByTitle
-                          ? Colors.brown[300]
-                          : Colors.yellow[100],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _searchByTitle = true;
-                        _filterDocuments(_searchController.text); // 제목으로 검색
-                      });
-                    },
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    child: Text(
-                      '내용',
-                      style: TextStyle(color: Colors.black),
+                  SizedBox(height: 8), // 검색창과 버튼 사이 여백 추가
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        OutlinedButton(
+                          child: Text(
+                            '제목',
+                            style: TextStyle(
+                              color: _searchByTitle
+                                  ? Colors.white
+                                  : Colors.black, // 버튼 색상 변경
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF8E7C5F)),
+                            backgroundColor: _searchByTitle
+                                ? const Color(0xFF8E7C5F)
+                                : Colors.transparent,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _searchByTitle = true;
+                              _filterDocuments(
+                                  _searchController.text); // 제목으로 검색
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 10),
+                        OutlinedButton(
+                          child: Text(
+                            '내용',
+                            style: TextStyle(
+                              color: !_searchByTitle
+                                  ? Colors.white
+                                  : Colors.black, // 버튼 색상 변경
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF8E7C5F)),
+                            backgroundColor: !_searchByTitle
+                                ? const Color(0xFF8E7C5F)
+                                : Colors.transparent,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _searchByTitle = false;
+                              _filterDocuments(
+                                  _searchController.text); // 내용으로 검색
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: !_searchByTitle
-                          ? Colors.brown[300]
-                          : Colors.yellow[100],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _searchByTitle = false;
-                        _filterDocuments(_searchController.text); // 내용으로 검색
-                      });
-                    },
+                  ),
+                  SizedBox(height: 8), // 버튼과 리스트 사이 여백 추가
+                  Expanded(
+                    child: _buildDocumentList(), // 문서 리스트 출력하는 위젯 호출
                   ),
                 ],
               ),
-              Expanded(
-                child: _buildDocumentList(), // 문서 리스트 출력하는 위젯 호출
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF8E7C5F), // 배경색 설정
         onPressed: () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreatePostScreen()),
+            MaterialPageRoute(builder: (context) => const CreatePostScreen()),
           );
           if (result == true) {
             _fetchDocuments(); // 새 글 등록 후 문서 데이터 다시 가져오기
           }
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white, // 아이콘 색상 설정
+        ),
       ),
     );
   }
@@ -181,17 +217,32 @@ class BrowseScreenState extends State<BrowseScreen> {
       itemCount: _filteredDocuments.length,
       itemBuilder: (context, index) {
         Document document = _filteredDocuments[index];
-        return ListTile(
-          title: Text(document.title),
-          subtitle: Text(document.content),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DocumentDetailScreen(document: document),
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+              horizontal: 16.0, vertical: 8.0), // 패딩 추가
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFE9DECD), // 배경색 설정
+              borderRadius: BorderRadius.circular(12.0), // 둥근 코너 설정
+            ),
+            child: ListTile(
+              title: Text(
+                document.title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold), // 제목 글자 두께 설정
               ),
-            );
-          },
+              subtitle: Text(document.content),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DocumentDetailScreen(document: document),
+                  ),
+                );
+              },
+            ),
+          ),
         );
       },
     );

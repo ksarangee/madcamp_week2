@@ -23,7 +23,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   bool hasDisliked = false;
   List<String> comments = [];
   TextEditingController commentController = TextEditingController();
-  bool _isLoading = true;  // 로딩 상태를 나타내는 변수
+  bool _isLoading = true; // 로딩 상태를 나타내는 변수
   final int userId = 3; // 실제 사용자 ID로 대체
 
   @override
@@ -37,7 +37,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       await _fetchComments();
       if (mounted) {
         setState(() {
-          _isLoading = false;  // 데이터 로드 완료 후 로딩 상태 해제
+          _isLoading = false; // 데이터 로드 완료 후 로딩 상태 해제
         });
       }
     });
@@ -137,8 +137,8 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         final data = jsonDecode(response.body);
         if (mounted) {
           setState(() {
-            comments =
-                List<String>.from(data.map((comment) => comment['comment_text']));
+            comments = List<String>.from(
+                data.map((comment) => comment['comment_text']));
           });
         }
       } else {
@@ -266,7 +266,9 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFF6E9),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(_document.title),
         actions: [
           IconButton(
@@ -365,7 +367,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                   ),
                 ),
                 Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                  color: Colors.white,
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [

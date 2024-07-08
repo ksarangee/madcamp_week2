@@ -62,6 +62,7 @@ class _InterestPostsScreenState extends State<InterestPostsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(title: Text('My Interests')),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

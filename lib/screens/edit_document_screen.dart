@@ -72,7 +72,9 @@ class _EditDocumentScreenState extends State<EditDocumentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFFFF6E9),
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text('Edit Document'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),

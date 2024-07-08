@@ -66,6 +66,8 @@ flutter:
     - assets/icons/home_icon.svg
     - assets/icons/profile_icon.svg
     - assets/below_cookie.png
+    - assets/images/cookie.png
+    - assets/images/whole_cookie.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
