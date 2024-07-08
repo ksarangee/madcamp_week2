@@ -218,26 +218,27 @@ class BrowseScreenState extends State<BrowseScreen> {
       itemBuilder: (context, index) {
         Document document = _filteredDocuments[index];
         return Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 16.0, vertical: 8.0), // 패딩 추가
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFF4EAE5), // 배경색 설정
-              borderRadius: BorderRadius.circular(12.0), // 둥근 코너 설정
+              color: const Color(0xFFF4EAE5),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: ListTile(
               title: Text(
                 document.title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold), // 제목 글자 두께 설정
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(document.content),
+              subtitle: Text(
+                document.content,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        DocumentDetailScreen(document: document),
+                    builder: (context) => DocumentDetailScreen(document: document),
                   ),
                 );
               },

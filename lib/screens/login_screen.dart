@@ -27,11 +27,15 @@ class LoginScreenState extends State<LoginScreen> {
       await _sendUserInfoToServer(user);
       print('사용자 정보 서버 전송 성공');
 
-      // 로그인 성공 시 홈 화면으로 이동
+      // 모든 데이터가 준비된 후 홈 화면으로 이동
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
       print('홈 화면으로 이동');
     } catch (error) {
       print('사용자 정보 요청 실패 $error');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -88,6 +92,9 @@ class LoginScreenState extends State<LoginScreen> {
           await _afterSuccess(token);
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
+          setState(() {
+            _isLoading = false;
+          });
         }
       }
     } else {
@@ -100,12 +107,11 @@ class LoginScreenState extends State<LoginScreen> {
         await _afterSuccess(token);
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
-    setState(() {
-      _isLoading = false;
-    });
-    return;
   }
 
   @override
