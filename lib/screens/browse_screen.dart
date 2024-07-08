@@ -233,7 +233,11 @@ class BrowseScreenState extends State<BrowseScreen> {
                 document.title,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(document.content),
+              subtitle: Text(
+                document.content,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
               onTap: () {
                 Navigator.push(
                   context,

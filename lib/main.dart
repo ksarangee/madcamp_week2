@@ -17,19 +17,16 @@ void main() async {
     statusBarBrightness: Brightness.dark,
   ));
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getString('accessToken') != null;
-
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // bool isLoggedIn = prefs.getString('accessToken') != null;
-
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
+  const MyApp({super.key});
 
-  const MyApp({super.key, required this.isLoggedIn});
+  Future<bool> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('accessToken') != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +34,21 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: "IBMPlexSansKR",
-        primaryColor: Color(0xFF42312A),
-        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        primaryColor: const Color(0xFF42312A),
         useMaterial3: true,
       ),
-      initialRoute: '/home', // 초기 경로를 로그인으로 설정
+      home: FutureBuilder<bool>(
+        future: checkLoginStatus(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData && snapshot.data!) {
+            return const MyHomePage();
+          } else {
+            return const LoginScreen();
+          }
+        },
+      ),
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const MyHomePage(),
@@ -58,7 +65,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0;
+  int _currentIndex = 1; // 초기값을 홈 화면의 인덱스로 설정
 
   final List<Widget> _pages = [
     const BrowseScreen(),
@@ -80,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear(); // 저장된 모든 데이터 초기화
+    if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/login');
   }
 
@@ -91,8 +99,8 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.white,
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        selectedIconTheme: IconThemeData(color: Color(0xFF42312A)),
-        selectedLabelStyle: TextStyle(
+        selectedIconTheme: const IconThemeData(color: Color(0xFF42312A)),
+        selectedLabelStyle: const TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.bold,
             color: Color(0xFF42312A)),
