@@ -3,7 +3,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';  // shared_preferences 패키지 임포트
+import 'package:shared_preferences/shared_preferences.dart'; // shared_preferences 패키지 임포트
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,11 +22,11 @@ class LoginScreenState extends State<LoginScreen> {
           '\n회원번호: ${user.id}'
           '\n닉네임: ${user.kakaoAccount?.profile?.nickname}'
           '\n이메일: ${user.kakaoAccount?.email}');
-      
-      await _saveToken(token);  // 토큰 저장
+
+      await _saveToken(token); // 토큰 저장
       await _sendUserInfoToServer(user);
       print('사용자 정보 서버 전송 성공');
-      
+
       // 로그인 성공 시 홈 화면으로 이동
       Navigator.pushReplacementNamed(context, '/home');
       print('홈 화면으로 이동');
@@ -48,15 +48,20 @@ class LoginScreenState extends State<LoginScreen> {
       Uri.parse('http://172.10.7.100/kakao_login'), // 실제 서버 URL로 변경하세요
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'kakao_id': user.id.toString(),  // String?을 String으로 변환
-        'nickname': user.kakaoAccount?.profile?.nickname ?? 'Unknown',  // String?을 String으로 변환
+        'kakao_id': user.id.toString(), // String?을 String으로 변환
+        'nickname': user.kakaoAccount?.profile?.nickname ??
+            'Unknown', // String?을 String으로 변환
       }),
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to send user info to server');
+    if (response.statusCode == 200) {
+      // 서버에 사용자 정보 전송 성공하면 SharedPreferences에 닉네임 저장
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+          'userNickname', user.kakaoAccount?.profile?.nickname ?? 'Unknown');
+      print('닉네임 저장 성공');
     } else {
-      print('서버 응답: ${response.body}');
+      throw Exception('Failed to send user info to server');
     }
   }
 

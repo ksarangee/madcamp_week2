@@ -86,7 +86,6 @@ class BrowseScreenState extends State<BrowseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Browse')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 5.0),

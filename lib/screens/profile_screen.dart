@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';  // 카카오 SDK 임포트
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart'; // 카카오 SDK 임포트
 import 'package:http/http.dart' as http; // http 패키지 추가
 import 'dart:convert'; // json 디코딩을 위해 추가
 import '../models/document.dart';
@@ -16,11 +16,20 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   List<String> interests = ["역사", "개발", "엔터테인먼트", "음식", "일상", "예술"];
   List<String> selectedInterests = [];
+  String userNickname = ''; //사용자 닉네임을 저장할 변수
 
   @override
   void initState() {
     super.initState();
     _loadInterests();
+    _loadUserNickname();
+  }
+
+  Future<void> _loadUserNickname() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userNickname = prefs.getString('userNickname') ?? '사용자'; // 저장된 닉네임 불러오기
+    });
   }
 
   Future<void> _loadInterests() async {
@@ -79,12 +88,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _logout(BuildContext context) async {
     try {
-      await UserApi.instance.unlink();  // 카카오 연결 해제
+      await UserApi.instance.unlink(); // 카카오 연결 해제
     } catch (error) {
       print('카카오 연결 해제 실패: $error');
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();  // 모든 저장된 데이터 초기화
+    await prefs.clear(); // 모든 저장된 데이터 초기화
     Navigator.pushReplacementNamed(context, '/login');
   }
 
@@ -92,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('프로필'),
+        title: Text('$userNickname님 반가워요!'),
       ),
       body: ListView(
         children: [
@@ -203,20 +212,20 @@ class _LikedPostsScreenState extends State<LikedPostsScreen> {
       final data = jsonDecode(response.body);
       setState(() {
         likedPosts = List<Map<String, dynamic>>.from(data.map((post) => {
-          'id': post['id'],
-          'title': post['title'],
-          'content': post['content'],
-          'image': post['image'],
-          'category_id': post['category_id'],
-          'created_at': post['created_at'],
-          'updated_at': post['updated_at'],
-        }));
+              'id': post['id'],
+              'title': post['title'],
+              'content': post['content'],
+              'image': post['image'],
+              'category_id': post['category_id'],
+              'created_at': post['created_at'],
+              'updated_at': post['updated_at'],
+            }));
       });
     } else {
       print('Failed to fetch liked posts');
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,10 +249,10 @@ class _LikedPostsScreenState extends State<LikedPostsScreen> {
                       title: likedPosts[index]['title'],
                       content: likedPosts[index]['content'],
                       imageUrl: likedPosts[index]['image'],
-                      createdAt: likedPosts[index]['created_at']?? '',
-                      updatedAt: likedPosts[index]['updated_at']?? '',
-                      todayViews: likedPosts[index]['today_views']?? 0,
-                      categoryId: likedPosts[index]['category_id']??0,
+                      createdAt: likedPosts[index]['created_at'] ?? '',
+                      updatedAt: likedPosts[index]['updated_at'] ?? '',
+                      todayViews: likedPosts[index]['today_views'] ?? 0,
+                      categoryId: likedPosts[index]['category_id'] ?? 0,
                     ),
                   ),
                 ),
