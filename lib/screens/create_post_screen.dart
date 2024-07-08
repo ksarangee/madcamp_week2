@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
 import './../secret.dart';
+import 'dart:io';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -17,8 +19,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   String? _selectedCategory;
   bool _isLoading = false;
   String _errorMessage = '';
+  File? _image;
 
   final List<String> _categories = ['역사', '개발', '엔터테인먼트', '음식', '일상', '예술'];
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   Future<void> _submitPost() async {
     setState(() {
@@ -27,25 +39,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
 
     try {
-      final response = await http.post(
-        Uri.parse('$backendUrl/create_post'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'title': _titleController.text,
-          'content': _contentController.text,
-          'image': _imageUrlController.text.isNotEmpty
-              ? _imageUrlController.text
-              : null,
-          'category_id': _categories.indexOf(_selectedCategory!) + 1,
-        }),
-      );
+      var request = http.MultipartRequest('POST', Uri.parse('$backendUrl/create_post'));
+      request.fields['title'] = _titleController.text;
+      request.fields['content'] = _contentController.text;
+      request.fields['category_id'] = (_categories.indexOf(_selectedCategory!) + 1).toString();
+
+      if (_image != null) {
+        request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
+      } else if (_imageUrlController.text.isNotEmpty) {
+        request.fields['image_url'] = _imageUrlController.text;
+      }
+
+      final response = await request.send();
 
       print('Server Response: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
-        Navigator.pop(
-            context, true); // Return to the previous screen with success flag
+        Navigator.pop(context, true); // Return to the previous screen with success flag
       } else {
         throw Exception('Failed to create post');
       }
@@ -68,8 +77,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed:
-                _selectedCategory != null && !_isLoading ? _submitPost : null,
+            onPressed: _selectedCategory != null && !_isLoading ? _submitPost : null,
           ),
         ],
       ),
@@ -105,6 +113,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 controller: _imageUrlController,
                 decoration:
                     const InputDecoration(labelText: 'Image URL (optional)'),
+              ),
+              if (_image != null)
+                Image.file(_image!),
+              TextButton(
+                onPressed: _pickImage,
+                child: const Text('Pick Image'),
               ),
               if (_isLoading) const CircularProgressIndicator(),
               if (_errorMessage.isNotEmpty)
