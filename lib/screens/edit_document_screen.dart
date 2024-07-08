@@ -47,15 +47,11 @@ class _EditDocumentScreenState extends State<EditDocumentScreen> {
       );
 
       if (response.statusCode == 200) {
-        final updatedDocument = Document(
-          id: widget.document.id,
-          title: _titleController.text,
-          content: _contentController.text,
-          imageUrl: widget.document.imageUrl,
-          updatedAt: DateTime.now().toString(), // 현재 시간으로 업데이트
-          createdAt: widget.document.createdAt,
-          // 다른 필드들은 유지
-        );
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final updatedDocument =
+            Document.fromJson(responseData); // JSON 데이터에서 Document 객체 생성
+
+        Navigator.pop(context, updatedDocument);
         Navigator.pop(context, updatedDocument);
       } else {
         // 에러 처리

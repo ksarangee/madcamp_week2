@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/document.dart';
 import '../screens/document_detail_screen.dart';
+import '../screens/trend_screen.dart'; // Import TrendScreen
+import '../screens/interest_posts_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,8 +21,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
-  Document? fixedDocument; // 세 번째 버튼에 사용할 고정된 Document 객체
-  Document? randomDocument; // 네 번째 버튼에 사용할 랜덤 Document 객체
+  Document? fixedDocument;
+  Document? randomDocument;
   String fixedDocumentTitle = 'Loading...';
   String randomDocumentTitle = 'Loading...';
   final List<Map<String, String>> quotes = [
@@ -68,12 +70,10 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _loadFixedDocumentTitle() async {
     final prefs = await SharedPreferences.getInstance();
-    final today = DateTime.now()
-        .toString()
-        .split(' ')[0]; // Get current date as 'YYYY-MM-DD'
+    final today = DateTime.now().toString().split(' ')[0];
     final lastFetchDate = prefs.getString('lastFetchDate');
 
-    if (lastFetchDate != today || !prefs.containsKey('fixedDocumentTitle')) {
+    if (lastFetchDate != today || !prefs.containsKey('fixedDocumentId')) {
       try {
         final response = await http.get(Uri.parse('$backendUrl/posts'));
 
@@ -83,10 +83,11 @@ class _HomeScreenState extends State<HomeScreen>
             var randomIndex =
                 DateTime.now().millisecondsSinceEpoch % data.length;
             Map<String, dynamic> fixedDocumentData = data[randomIndex];
+            fixedDocument = Document.fromJson(fixedDocumentData);
             setState(() {
-              fixedDocument = Document.fromJson(fixedDocumentData);
               fixedDocumentTitle = fixedDocument!.title;
             });
+            prefs.setString('fixedDocumentId', fixedDocument!.id.toString());
             prefs.setString('fixedDocumentTitle', fixedDocumentTitle);
             prefs.setString('lastFetchDate', today);
           } else {
@@ -131,16 +132,19 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _fetchFixedDocument() async {
-    try {
-      final response = await http.get(Uri.parse('$backendUrl/posts'));
+    final prefs = await SharedPreferences.getInstance();
+    final fixedDocumentId = prefs.getString('fixedDocumentId');
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        if (data.isNotEmpty) {
-          var randomIndex = DateTime.now().millisecondsSinceEpoch % data.length;
-          Map<String, dynamic> fixedDocumentData = data[randomIndex];
+    if (fixedDocumentId != null) {
+      try {
+        final response =
+            await http.get(Uri.parse('$backendUrl/posts/$fixedDocumentId'));
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data = jsonDecode(response.body);
+          fixedDocument = Document.fromJson(data);
           setState(() {
-            fixedDocument = Document.fromJson(fixedDocumentData);
+            fixedDocumentTitle = fixedDocument!.title;
           });
 
           Navigator.push(
@@ -151,13 +155,13 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           );
         } else {
-          throw Exception('No documents available');
+          throw Exception('Failed to load fixed document');
         }
-      } else {
-        throw Exception('Failed to load documents');
+      } catch (e) {
+        print('Error: $e');
       }
-    } catch (e) {
-      print('Error: $e');
+    } else {
+      print('No fixed document ID saved');
     }
   }
 
@@ -187,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // This is necessary to ensure the mixin works
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -233,12 +237,27 @@ class _HomeScreenState extends State<HomeScreen>
                   crossAxisSpacing: 16,
                   children: [
                     CustomButton(
-                      text: 'Trend',
-                      onPressed: () => TrendService.performAction(context),
+                      text: 'Trending\nPosts',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const TrendScreen(), // Navigate to TrendScreen
+                          ),
+                        );
+                      },
                     ),
                     CustomButton(
-                      text: 'Interest',
-                      onPressed: () => InterestService.performAction(context),
+                      text: 'My\nInterests',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InterestPostsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     CustomButton(
                       text: 'Today\'s Text \n $fixedDocumentTitle',

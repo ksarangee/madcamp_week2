@@ -29,14 +29,23 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   void initState() {
     super.initState();
     _document = widget.document;
-    Future.microtask(() async {
-      await _incrementPostView();
-      await _fetchDocument();
-      await _fetchReactions();
-      await _fetchComments();
-      setState(() {
-        _isLoading = false; // 데이터 로드 완료 후 로딩 상태 해제
-      });
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+    });
+
+    await _incrementPostView();
+    await _fetchDocument();
+    await _fetchReactions();
+    await _fetchComments();
+
+    if (!mounted) return;
+    setState(() {
+      _isLoading = false;
     });
   }
 
@@ -244,6 +253,25 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     }
   }
 
+  String getCategoryName(int categoryId) {
+    switch (categoryId) {
+      case 1:
+        return '역사';
+      case 2:
+        return '개발';
+      case 3:
+        return '엔터테인먼트';
+      case 4:
+        return '음식';
+      case 5:
+        return '일상';
+      case 6:
+        return '예술';
+      default:
+        return '기타';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -291,6 +319,20 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                         Text(_document.content,
                             style: const TextStyle(fontSize: 18.0)),
                         const SizedBox(height: 16.0),
+                        Container(
+                          //관심분야 보여주기
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            getCategoryName(_document.categoryId),
+                            style: TextStyle(
+                                fontSize: 14.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         Text('Updated at: ${_document.updatedAt}',
                             style: const TextStyle(fontSize: 14.0)),
                         const SizedBox(height: 16.0),

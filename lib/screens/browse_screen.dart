@@ -4,6 +4,7 @@ import 'dart:convert';
 import './../secret.dart';
 import '../models/document.dart';
 import 'document_detail_screen.dart';
+import 'create_post_screen.dart';
 
 class BrowseScreen extends StatefulWidget {
   const BrowseScreen({super.key});
@@ -56,6 +57,9 @@ class BrowseScreenState extends State<BrowseScreen> {
     } catch (e) {
       print('Error: $e');
       // 에러 처리 로직 추가
+      setState(() {
+        _errorMessage = 'Error: $e';
+      });
     }
   }
 
@@ -146,37 +150,51 @@ class BrowseScreenState extends State<BrowseScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreatePostScreen()),
+          );
+          if (result == true) {
+            _fetchDocuments(); // 새 글 등록 후 문서 데이터 다시 가져오기
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
-  // 검색 결과에 따라 문서 리스트를 생성하는 메소드
   Widget _buildDocumentList() {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
-    } else if (_errorMessage.isNotEmpty) {
-      return Center(child: Text(_errorMessage)); // 데이터 로딩 에러 메시지 출력
-    } else if (_filteredDocuments.isEmpty) {
-      return const Center(child: Text('No documents found')); // 검색 결과 없음 메시지 출력
-    } else {
-      // 검색 결과에 맞는 문서 리스트 출력
-      return ListView.builder(
-        itemCount: _filteredDocuments.length,
-        itemBuilder: (context, index) {
-          final document = _filteredDocuments[index];
-          return ListTile(
-            title: Text(document.title, style: const TextStyle(fontSize: 18.0)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      DocumentDetailScreen(document: document), // 문서 상세 화면으로 이동
-                ),
-              );
-            },
-          );
-        },
-      );
     }
+
+    if (_errorMessage.isNotEmpty) {
+      return Center(child: Text(_errorMessage));
+    }
+
+    if (_filteredDocuments.isEmpty) {
+      return const Center(child: Text('No documents found.'));
+    }
+
+    return ListView.builder(
+      itemCount: _filteredDocuments.length,
+      itemBuilder: (context, index) {
+        Document document = _filteredDocuments[index];
+        return ListTile(
+          title: Text(document.title),
+          subtitle: Text(document.content),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DocumentDetailScreen(document: document),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
