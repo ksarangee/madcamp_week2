@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: Color(0xFFFFF6E9),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
           children: [
@@ -220,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen>
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
+                              color: Color(0xFF42312A),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -229,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen>
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
+                              color: Color(0xFF42312A),
                             ),
                             textAlign: TextAlign.center,
                           ),

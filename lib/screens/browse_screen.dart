@@ -85,7 +85,7 @@ class BrowseScreenState extends State<BrowseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFF6E9), // 배경색을 하얀색으로 설정
+      backgroundColor: Colors.white, // 배경색을 하얀색으로 설정
       body: Stack(
         children: [
           SafeArea(
@@ -98,8 +98,8 @@ class BrowseScreenState extends State<BrowseScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFFE9DECD)),
-                        borderRadius: BorderRadius.circular(40.0),
+                        border: Border.all(color: const Color(0xFF42312A)),
+                        borderRadius: BorderRadius.circular(30.0),
                         color: Colors.white,
                       ),
                       child: TextField(
@@ -131,9 +131,9 @@ class BrowseScreenState extends State<BrowseScreen> {
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Color(0xFF8E7C5F)),
+                            side: const BorderSide(color: Color(0xFF42312A)),
                             backgroundColor: _searchByTitle
-                                ? const Color(0xFF8E7C5F)
+                                ? const Color(0xFF42312A)
                                 : Colors.transparent,
                           ),
                           onPressed: () {
@@ -155,9 +155,9 @@ class BrowseScreenState extends State<BrowseScreen> {
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Color(0xFF8E7C5F)),
+                            side: const BorderSide(color: Color(0xFF42312A)),
                             backgroundColor: !_searchByTitle
-                                ? const Color(0xFF8E7C5F)
+                                ? const Color(0xFF42312A)
                                 : Colors.transparent,
                           ),
                           onPressed: () {
@@ -182,7 +182,7 @@ class BrowseScreenState extends State<BrowseScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF8E7C5F), // 배경색 설정
+        backgroundColor: const Color(0xFF42312A), // 배경색 설정
         onPressed: () async {
           final result = await Navigator.push(
             context,
@@ -222,7 +222,7 @@ class BrowseScreenState extends State<BrowseScreen> {
               horizontal: 16.0, vertical: 8.0), // 패딩 추가
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFE9DECD), // 배경색 설정
+              color: const Color(0xFFF4EAE5), // 배경색 설정
               borderRadius: BorderRadius.circular(12.0), // 둥근 코너 설정
             ),
             child: ListTile(

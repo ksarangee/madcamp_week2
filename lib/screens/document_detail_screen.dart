@@ -266,7 +266,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFF6E9),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(_document.title),

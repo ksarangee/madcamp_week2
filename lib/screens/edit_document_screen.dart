@@ -35,7 +35,7 @@ class _EditDocumentScreenState extends State<EditDocumentScreen> {
     _imageUrlController =
         TextEditingController(text: widget.document.imageUrl ?? '');
     _selectedCategory =
-        _categories[widget.document.categoryId - 1]; // 기존 카테고리를 초기값으로 설정
+        _categories[widget.document.categoryId]; // 기존 카테고리를 초기값으로 설정
   }
 
   @override
