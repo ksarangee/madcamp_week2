@@ -34,7 +34,7 @@ class _TrendScreenState extends State<TrendScreen> {
             data.map((doc) => Document.fromJson(doc)).toList();
 
         // Sort documents by todayViews in descending order
-        documents.sort((a, b) => b.todayViews.compareTo(a.todayViews));
+        documents.sort((a, b) => (b.todayViews ?? 0).compareTo(a.todayViews ?? 0));
 
         //트렌드 글 10개만 보여주기
         documents = documents.take(_maxDocuments).toList();

@@ -5,7 +5,7 @@ class Document {
   final String content;
   final String createdAt;
   final String updatedAt;
-  final int todayViews; // 추가된 필드: 오늘의 조회수
+  final int? todayViews; // 추가된 필드: 오늘의 조회수
   final int categoryId; //카데고리 id 필드 추가
 
   Document({
