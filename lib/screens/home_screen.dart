@@ -268,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen>
                           },
                         ),
                         TodaytextCustomButton(
-                          text: 'Today\'s Text \n $fixedDocumentTitle',
+                          text: '$fixedDocumentTitle',
                           onPressed: () => _fetchFixedDocument(),
                         ),
                         RandomtextCustomButton(

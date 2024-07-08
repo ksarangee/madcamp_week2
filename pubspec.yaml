@@ -71,6 +71,8 @@ flutter:
     - assets/below_cookie.png
     - assets/images/cookie.png
     - assets/images/whole_cookie.png
+    - assets/images/todaypost.png
+    - assets/images/randompost.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
