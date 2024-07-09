@@ -21,8 +21,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _loadInterests();
     _loadUserNickname();
+    _loadInterests();
   }
 
   Future<void> _loadUserNickname() async {
@@ -34,9 +34,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadInterests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      selectedInterests = prefs.getStringList('selectedInterests') ?? [];
-    });
+    int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
+    if (userId != null) {
+      final response = await http.get(
+        Uri.parse('http://172.10.7.100/get_interests/$userId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          selectedInterests = List<String>.from(
+              data.map((interest) => interest['category_name']));
+        });
+      } else {
+        print('Failed to load interests from server');
+      }
+    } else {
+      setState(() {
+        selectedInterests = prefs.getStringList('selectedInterests') ?? [];
+      });
+    }
   }
 
   Future<void> _saveInterests() async {
@@ -54,8 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _saveInterestsToServer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
-    int? userId = 3; // 임시로 3로 설정
+    int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
     if (userId == null) return;
 
     final response = await http.post(
@@ -109,7 +128,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           ListTile(
             title: const Text('관심 분야 설정 및 수정'),
-            onTap: () {
+            onTap: () async {
+              // Ensure interests are loaded before showing the dialog
+              await _loadInterests();
+
               List<String> tempSelectedInterests = List.from(selectedInterests);
 
               showDialog(
