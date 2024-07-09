@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // intl 패키지 임포트
 import '../models/document.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -263,6 +264,136 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     }
   }
 
+  Future<void> _reportPost(String reason) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$backendUrl/report_post'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'post_id': _document.id,
+          'user_id': userId,
+          'report_reason': reason,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('신고가 접수되었습니다.')),
+        );
+      } else {
+        print('Failed to report post');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('신고에 실패했습니다. 다시 시도해주세요.')),
+        );
+      }
+    } catch (e) {
+      print('Error reporting post: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('신고 중 오류가 발생했습니다. 다시 시도해주세요.')),
+      );
+    }
+  }
+
+  void _showReportPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String? selectedReason;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('신고'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    title: Text('스팸'),
+                    leading: Radio<String>(
+                      value: '스팸',
+                      groupValue: selectedReason,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedReason = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('부적절한 콘텐츠'),
+                    leading: Radio<String>(
+                      value: '부적절한 콘텐츠',
+                      groupValue: selectedReason,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedReason = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('허위 정보'),
+                    leading: Radio<String>(
+                      value: '허위 정보',
+                      groupValue: selectedReason,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedReason = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('기타'),
+                    leading: Radio<String>(
+                      value: '기타',
+                      groupValue: selectedReason,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedReason = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    if (selectedReason != null) {
+                      _reportPost(selectedReason!); // 신고 내용을 전송
+                      Navigator.of(context).pop(); // 팝업을 닫음
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('신고 사유를 선택해주세요.')),
+                      );
+                    }
+                  },
+                  child: Text('제출'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // 팝업을 닫음
+                  },
+                  child: Text('취소'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // 한국 표준시(KST)로 변환된 날짜와 시간 형식화 함수
+  String _formatDateTimeKST(String dateTimeString) {
+    final dateFormat = DateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", "en_US");
+    final utcDateTime = dateFormat.parse(dateTimeString, true).toUtc();
+    final kstDateTime = utcDateTime.add(Duration(hours: 9)); // UTC+9 시간대 적용
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(kstDateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,6 +402,10 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         backgroundColor: Colors.white,
         title: Text(_document.title),
         actions: [
+          IconButton(
+            icon: Icon(Icons.report),
+            onPressed: _showReportPopup,
+          ),
           IconButton(
             icon: Icon(Icons.edit),
             onPressed: () async {
@@ -312,7 +447,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                         Text(_document.content,
                             style: const TextStyle(fontSize: 18.0)),
                         const SizedBox(height: 16.0),
-                        Text('Updated at: ${_document.updatedAt}',
+                        Text('Updated at: ${_formatDateTimeKST(_document.updatedAt)}',
                             style: const TextStyle(fontSize: 14.0)),
                         const SizedBox(height: 16.0),
                         Row(

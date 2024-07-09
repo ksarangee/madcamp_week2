@@ -40,6 +40,7 @@ dependencies:
   shared_preferences: ^2.2.3
   image_picker: ^0.8.4+3
   permission_handler: ^10.2.0
+  intl: ^0.17.0
 
 
 
