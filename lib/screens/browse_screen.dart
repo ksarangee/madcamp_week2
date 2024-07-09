@@ -98,8 +98,8 @@ class BrowseScreenState extends State<BrowseScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF42312A)),
-                        borderRadius: BorderRadius.circular(30.0),
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(20.0),
                         color: Colors.white,
                       ),
                       child: TextField(
@@ -109,7 +109,7 @@ class BrowseScreenState extends State<BrowseScreen> {
                           suffixIcon: Icon(Icons.search),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 6.0),
+                              horizontal: 16.0, vertical: 4.0),
                           isDense: true,
                         ),
                         onChanged: _filterDocuments, // 검색어 입력 변화 감지
@@ -131,9 +131,9 @@ class BrowseScreenState extends State<BrowseScreen> {
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Color(0xFF42312A)),
+                            side: const BorderSide(color: Colors.black),
                             backgroundColor: _searchByTitle
-                                ? const Color(0xFF42312A)
+                                ? Colors.black
                                 : Colors.transparent,
                           ),
                           onPressed: () {
@@ -155,9 +155,9 @@ class BrowseScreenState extends State<BrowseScreen> {
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Color(0xFF42312A)),
+                            side: const BorderSide(color: Colors.black),
                             backgroundColor: !_searchByTitle
-                                ? const Color(0xFF42312A)
+                                ? Colors.black
                                 : Colors.transparent,
                           ),
                           onPressed: () {
@@ -182,7 +182,7 @@ class BrowseScreenState extends State<BrowseScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF42312A), // 배경색 설정
+        backgroundColor: Colors.black, // 배경색 설정
         onPressed: () async {
           final result = await Navigator.push(
             context,
@@ -221,10 +221,10 @@ class BrowseScreenState extends State<BrowseScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F4F3),
+              color: const Color(0xFFFAF7F3),
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(
-                color: const Color(0xFF42312A), // 테두리 색상 설정
+                color: Colors.black, // 테두리 색상 설정
                 width: 2.0, // 테두리 두께 설정
               ),
             ),

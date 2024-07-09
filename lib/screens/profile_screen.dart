@@ -21,8 +21,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserNickname();
     _loadInterests();
+    _loadUserNickname();
   }
 
   Future<void> _loadUserNickname() async {
@@ -34,29 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadInterests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
-    if (userId != null) {
-      final response = await http.get(
-        Uri.parse('http://172.10.7.100/get_interests/$userId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          selectedInterests = List<String>.from(
-              data.map((interest) => interest['category_name']));
-        });
-      } else {
-        print('Failed to load interests from server');
-      }
-    } else {
-      setState(() {
-        selectedInterests = prefs.getStringList('selectedInterests') ?? [];
-      });
-    }
+    setState(() {
+      selectedInterests = prefs.getStringList('selectedInterests') ?? [];
+    });
   }
 
   Future<void> _saveInterests() async {
@@ -74,7 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _saveInterestsToServer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
+    // int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
+    int? userId = 3; // 임시로 3로 설정
     if (userId == null) return;
 
     final response = await http.post(
@@ -120,24 +101,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('$userNickname님\n 반가워요!'),
-      ),
       body: ListView(
+        padding: const EdgeInsets.all(12.0),
         children: [
+          const SizedBox(height: 40.0), //위 여백
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0), // 왼쪽에 여백 추가
+            child: Text(
+              ' $userNickname님,\n 반가워요!',
+              style: const TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20.0),
           ListTile(
             title: const Text('관심 분야 설정 및 수정'),
-            onTap: () async {
-              // Ensure interests are loaded before showing the dialog
-              await _loadInterests();
-
+            onTap: () {
               List<String> tempSelectedInterests = List.from(selectedInterests);
 
               showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
+                    backgroundColor: Colors.white,
                     title: const Text('관심 분야를 선택하세요'),
                     content: StatefulBuilder(
                       builder: (BuildContext context, StateSetter setState) {
@@ -261,29 +249,50 @@ class _LikedPostsScreenState extends State<LikedPostsScreen> {
       body: ListView.builder(
         itemCount: likedPosts.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(likedPosts[index]['title']),
-            subtitle: Text(likedPosts[index]['content']),
-            onTap: () {
-              // DocumentDetailScreen으로 이동
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DocumentDetailScreen(
-                    document: Document(
-                      id: likedPosts[index]['id'],
-                      title: likedPosts[index]['title'],
-                      content: likedPosts[index]['content'],
-                      imageUrl: likedPosts[index]['image'],
-                      createdAt: likedPosts[index]['created_at'] ?? '',
-                      updatedAt: likedPosts[index]['updated_at'] ?? '',
-                      todayViews: likedPosts[index]['today_views'] ?? 0,
-                      categoryId: likedPosts[index]['category_id'] ?? 0,
-                    ),
-                  ),
+          Document document = Document(
+            id: likedPosts[index]['id'],
+            title: likedPosts[index]['title'],
+            content: likedPosts[index]['content'],
+            imageUrl: likedPosts[index]['image'],
+            createdAt: likedPosts[index]['created_at'] ?? '',
+            updatedAt: likedPosts[index]['updated_at'] ?? '',
+            todayViews: likedPosts[index]['today_views'] ?? 0,
+            categoryId: likedPosts[index]['category_id'] ?? 0,
+          );
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFFAF7F3),
+                borderRadius: BorderRadius.circular(12.0),
+                border: Border.all(
+                  color: Colors.black, // 테두리 색상 설정
+                  width: 2.0, // 테두리 두께 설정
                 ),
-              );
-            },
+              ),
+              child: ListTile(
+                title: Text(
+                  document.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  document.content,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                onTap: () {
+                  // DocumentDetailScreen으로 이동
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          DocumentDetailScreen(document: document),
+                    ),
+                  );
+                },
+              ),
+            ),
           );
         },
       ),

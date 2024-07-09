@@ -71,6 +71,13 @@ class _TrendScreenState extends State<TrendScreen> {
                   itemBuilder: (context, index) {
                     Document document = _documents[index];
                     return ListTile(
+                      leading: Text(
+                        '${index + 1}',
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       title: Text(document.title),
                       onTap: () {
                         Navigator.push(

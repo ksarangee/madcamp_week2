@@ -263,6 +263,25 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     }
   }
 
+  String getCategoryName(int categoryId) {
+    switch (categoryId) {
+      case 1:
+        return '역사';
+      case 2:
+        return '개발';
+      case 3:
+        return '엔터테인먼트';
+      case 4:
+        return '음식';
+      case 5:
+        return '일상';
+      case 6:
+        return '예술';
+      default:
+        return '기타';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,6 +331,20 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                         Text(_document.content,
                             style: const TextStyle(fontSize: 18.0)),
                         const SizedBox(height: 16.0),
+                        Container(
+                          //관심분야 보여주기
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            getCategoryName(_document.categoryId),
+                            style: TextStyle(
+                                fontSize: 14.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         Text('Updated at: ${_document.updatedAt}',
                             style: const TextStyle(fontSize: 14.0)),
                         const SizedBox(height: 16.0),
