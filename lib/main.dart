@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: "IBMPlexSansKR",
-        //primaryColor: const Color(0xFF42312A),
+        primaryColor: Colors.black,
         useMaterial3: true,
       ),
       home: FutureBuilder<bool>(
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           }
         },
       ),
-      initialRoute: '/home',
+      initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const MyHomePage(),

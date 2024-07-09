@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen>
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
+                              //fontStyle: FontStyle.italic,
                               color: Color(0xFF42312A),
                             ),
                             textAlign: TextAlign.center,

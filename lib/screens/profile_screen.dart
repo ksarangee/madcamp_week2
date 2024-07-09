@@ -117,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 20.0),
           ListTile(
+            leading: Icon(Icons.favorite, color: Colors.grey[700]),
             title: const Text('관심 분야 설정 및 수정'),
             onTap: () {
               List<String> tempSelectedInterests = List.from(selectedInterests);
@@ -141,6 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         tempSelectedInterests, interest);
                                   });
                                 },
+                                activeColor: Colors.black,
                               );
                             }).toList(),
                           ),
@@ -152,7 +154,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text('취소'),
+                        child: const Text('취소',
+                            style: TextStyle(color: Colors.black)),
                       ),
                       TextButton(
                         onPressed: () {
@@ -161,7 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           });
                           _saveInterests();
                         },
-                        child: const Text('저장'),
+                        child: const Text('저장',
+                            style: TextStyle(color: Colors.black)),
                       ),
                     ],
                   );
@@ -170,6 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           ListTile(
+            leading: Icon(Icons.thumb_up, color: Colors.grey[700]),
             title: const Text('내가 좋아요 한 글'),
             onTap: () {
               Navigator.push(
@@ -181,6 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           ListTile(
+            leading: Icon(Icons.logout, color: Colors.grey[700]),
             title: const Text('로그아웃'),
             onTap: () {
               _logout(context); // 이 부분을 변경

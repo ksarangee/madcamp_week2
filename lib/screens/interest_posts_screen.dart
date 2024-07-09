@@ -60,7 +60,7 @@ class _InterestPostsScreenState extends State<InterestPostsScreen> {
           print('All posts: $allPosts'); // 디버그 로그
 
           List<Document> interestPosts = allPosts
-              .where((post) => categoryIds.contains(post['category']))
+              .where((post) => categoryIds.contains(post['category_id']))
               .map((post) => Document.fromJson(post))
               .toList();
           print('Interest posts: ${interestPosts.length}'); // 디버그 로그
@@ -125,7 +125,7 @@ class _InterestPostsScreenState extends State<InterestPostsScreen> {
                             child: Text(
                               categoryName,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

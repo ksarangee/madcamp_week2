@@ -49,35 +49,38 @@ class TodaytextCustomButton extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 30), // 위쪽 간격 추가
-                if (icon != null) ...[
-                  IconButton(
-                    icon: Icon(icon),
-                    onPressed: iconOnPressed ?? onPressed,
-                    color: textColor ?? Colors.white,
+                const SizedBox(height: 15), // 위쪽 간격 추가
+                Icon(
+                  Icons.today, // 하트 아이콘 추가
+                  color: Colors.black, // 하얀색으로 설정
+                  size: 23, // 아이콘 크기 설정
+                ),
+                const SizedBox(height: 12), // 아이콘과 텍스트 사이의 간격
+
+                Flexible(
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      color: textColor ?? Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 8), // 아이콘과 텍스트 사이의 간격
-                ],
-                Text(
-                  text,
-                  style: TextStyle(
-                    color: textColor ?? Colors.white,
-                    fontSize: 21,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
                 ),
                 const Spacer(), // 아래 텍스트를 아래쪽으로 밀기 위한 Spacer
-                Text(
-                  "Today's\nPost",
-                  style: TextStyle(
-                    color: Colors.black, // 검은색 텍스트
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3), // 텍스트 아래쪽 간격 추가
+                  child: Text(
+                    "Today's\nPost",
+                    style: TextStyle(
+                      color: Colors.black, // 검은색 텍스트
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 3), // 아래쪽 간격 추가
               ],
             ),
           ),

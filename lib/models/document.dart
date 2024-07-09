@@ -28,7 +28,7 @@ class Document {
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
       todayViews: json['today_views'] ?? 0, // 기본값 0 설정
-      categoryId: json['category'] ?? 0,
+      categoryId: json['category_id'] ?? 0,
     );
   }
 }

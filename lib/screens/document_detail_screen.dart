@@ -419,7 +419,6 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(_document.title),
         actions: [
           IconButton(
             icon: Icon(Icons.report),
@@ -438,8 +437,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                 setState(() {
                   _document = editedDocument;
                 });
-                // 수정된 문서 정보로 화면 갱신
-                await _fetchDocument(); // 최신 문서 정보 가져오기
+                await _fetchDocument();
                 _fetchReactions();
                 _fetchComments();
               }
@@ -457,21 +455,30 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Center(
+                          // 추가
+                          child: Text(
+                            _document.title,
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center, // 추가
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
                         if (_document.imageUrl != null &&
                             _document.imageUrl!.isNotEmpty)
                           Center(
+                            // 추가
                             child: Image.network(_document.imageUrl!),
                           ),
                         const SizedBox(height: 16.0),
-                        Text(_document.content,
-                            style: const TextStyle(fontSize: 18.0)),
-                        const SizedBox(height: 16.0),
                         Container(
-                          //관심분야 보여주기
                           padding:
                               EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: _getCategoryColor(_document.categoryId),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -480,7 +487,12 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                                 fontSize: 14.0, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Text('Updated at: ${_formatDateTimeKST(_document.updatedAt)}',
+                        const SizedBox(height: 16.0),
+                        Text(_document.content,
+                            style: const TextStyle(fontSize: 18.0)),
+                        const SizedBox(height: 16.0),
+                        Text(
+                            '최근 수정 시각: ${_formatDateTimeKST(_document.updatedAt)}',
                             style: const TextStyle(fontSize: 14.0)),
                         const SizedBox(height: 16.0),
                         Row(
@@ -488,7 +500,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                           children: [
                             Column(
                               children: [
-                                Text('Likes: $likes'),
+                                Text('좋아요: $likes'),
                                 IconButton(
                                   icon: Icon(
                                     hasLiked
@@ -502,7 +514,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                             ),
                             Column(
                               children: [
-                                Text('Dislikes: $dislikes'),
+                                Text('싫어요: $dislikes'),
                                 IconButton(
                                   icon: Icon(
                                     hasDisliked
@@ -517,7 +529,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                           ],
                         ),
                         const SizedBox(height: 16.0),
-                        const Text('Comments:',
+                        const Text('댓글:',
                             style: TextStyle(
                                 fontSize: 18.0, fontWeight: FontWeight.bold)),
                         ListView.builder(
@@ -543,7 +555,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                         child: TextField(
                           controller: commentController,
                           decoration: const InputDecoration(
-                            hintText: 'Add a comment',
+                            hintText: '댓글을 입력하세요',
                           ),
                         ),
                       ),
@@ -557,5 +569,24 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
               ],
             ),
     );
+  }
+
+  Color _getCategoryColor(int categoryId) {
+    switch (categoryId) {
+      case 1:
+        return Color(0xFFF3CDCD);
+      case 2:
+        return Color(0xFFC3DEF7);
+      case 3:
+        return Color(0xFFB7E6B6);
+      case 4:
+        return Color(0xFFF4DBB9);
+      case 5:
+        return Color(0xFFCDC1F2);
+      case 6:
+        return Color(0xFFB1EBEE);
+      default:
+        return Colors.grey[200]!;
+    }
   }
 }

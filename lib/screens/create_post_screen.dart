@@ -33,6 +33,29 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
+  void _showImageUrlDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Image URL'),
+          content: TextField(
+            controller: _imageUrlController,
+            decoration: InputDecoration(hintText: "Image URL (선택)"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _submitPost() async {
     setState(() {
       _isLoading = true;
@@ -80,7 +103,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Create Post'),
+        title: const Text('글 등록하기'),
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
@@ -90,55 +113,88 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            // 추가된 부분
-            child: Column(
-              children: [
-                DropdownButtonFormField<String>(
-                  value: _selectedCategory,
-                  decoration: const InputDecoration(labelText: 'Category'),
-                  dropdownColor: Colors.white,
-                  items: _categories
-                      .map((category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  },
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 200,
+                          child: DropdownButton<String>(
+                            value: _selectedCategory,
+                            isExpanded: true,
+                            hint: Align(
+                              alignment: Alignment.center,
+                              child: const Text('분야 선택'),
+                            ),
+                            dropdownColor: Colors.white,
+                            items: _categories
+                                .map((category) => DropdownMenuItem(
+                                      value: category,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(category),
+                                      ),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedCategory = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    TextField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        labelText: '제목',
+                        labelStyle: TextStyle(fontSize: 18),
+                      ),
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    TextField(
+                      controller: _contentController,
+                      decoration: const InputDecoration(
+                        labelText: '내용을 적어주세요!',
+                        alignLabelWithHint: true,
+                        border: InputBorder.none,
+                      ),
+                      maxLines: 16,
+                      keyboardType: TextInputType.multiline,
+                    ),
+                    if (_image != null) Image.file(_image!),
+                    if (_isLoading) const CircularProgressIndicator(),
+                    if (_errorMessage.isNotEmpty)
+                      Text(_errorMessage,
+                          style: const TextStyle(color: Colors.red)),
+                  ],
                 ),
-                TextField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(labelText: 'Title'),
-                ),
-                TextField(
-                  controller: _contentController,
-                  decoration: const InputDecoration(labelText: 'Content'),
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                ),
-                TextField(
-                  controller: _imageUrlController,
-                  decoration:
-                      const InputDecoration(labelText: 'Image URL (optional)'),
-                ),
-                if (_image != null) Image.file(_image!),
-                TextButton(
-                  onPressed: _pickImage,
-                  child: const Text('Pick Image'),
-                ),
-                if (_isLoading) const CircularProgressIndicator(),
-                if (_errorMessage.isNotEmpty)
-                  Text(_errorMessage,
-                      style: const TextStyle(color: Colors.red)),
-              ],
+              ),
             ),
-          ),
+            Positioned(
+              left: 15,
+              bottom: 3,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.link),
+                    onPressed: _showImageUrlDialog,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.photo),
+                    onPressed: _pickImage,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

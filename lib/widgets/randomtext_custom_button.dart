@@ -54,7 +54,7 @@ class RandomtextCustomButton extends StatelessWidget {
                   IconButton(
                     icon: Icon(icon),
                     onPressed: iconOnPressed ?? onPressed,
-                    color: textColor ?? Colors.white,
+                    color: textColor ?? Colors.black,
                   ),
                   const SizedBox(height: 0.1), // 아이콘과 텍스트 사이의 간격
                 ],
@@ -62,7 +62,7 @@ class RandomtextCustomButton extends StatelessWidget {
                   child: Text(
                     text,
                     style: TextStyle(
-                      color: textColor ?? Colors.white,
+                      color: textColor ?? Colors.black,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),

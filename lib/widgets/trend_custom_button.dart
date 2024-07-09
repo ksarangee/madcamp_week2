@@ -45,7 +45,7 @@ class TrendCustomButton extends StatelessWidget {
               const SizedBox(height: 30),
               Icon(
                 Icons.local_fire_department, // fire 아이콘 추가
-                color: Colors.white, // 하얀색으로 설정
+                color: Colors.black, // 하얀색으로 설정
                 size: 40, // 아이콘 크기 설정
               ),
               const Spacer(),
