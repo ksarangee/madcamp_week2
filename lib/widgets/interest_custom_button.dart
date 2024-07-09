@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 
 class InterestCustomButton extends StatelessWidget {
-  final String text;
   final VoidCallback onPressed;
   final Color? backgroundColor;
   final Color? textColor;
-  final IconData? icon;
-  final VoidCallback? iconOnPressed;
 
   const InterestCustomButton({
     super.key,
-    required this.text,
     required this.onPressed,
     this.backgroundColor,
     this.textColor,
-    this.icon,
-    this.iconOnPressed,
   });
 
   @override
@@ -23,36 +17,48 @@ class InterestCustomButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFFFBE9CE),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/interestpost.png'),
+            fit: BoxFit.cover,
           ),
-          padding: EdgeInsets.zero,
+          border: Border.all(
+            color: const Color(0xFF42312A),
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(15),
         ),
-        child: Center(
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: EdgeInsets.zero,
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              if (icon != null) ...[
-                IconButton(
-                  icon: Icon(icon),
-                  onPressed: iconOnPressed ?? onPressed,
-                  color: textColor ?? Colors.white,
-                ),
-                const SizedBox(height: 8), // 아이콘과 텍스트 사이의 간격
-              ],
+              const SizedBox(height: 30),
+              Icon(
+                Icons.favorite, // 하트 아이콘 추가
+                color: Colors.white, // 하얀색으로 설정
+                size: 40, // 아이콘 크기 설정
+              ),
+              const Spacer(),
               Text(
-                text,
+                "My\nInterests",
                 style: TextStyle(
-                  color: textColor ?? Color(0xFF898989),
-                  fontSize: 18,
+                  color: Colors.black,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 3),
             ],
           ),
         ),

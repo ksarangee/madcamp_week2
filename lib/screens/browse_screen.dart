@@ -221,7 +221,7 @@ class BrowseScreenState extends State<BrowseScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFEDE1DC),
+              color: const Color(0xFFF7F4F3),
               borderRadius: BorderRadius.circular(12.0),
               border: Border.all(
                 color: const Color(0xFF42312A), // 테두리 색상 설정

@@ -49,7 +49,7 @@ class RandomtextCustomButton extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 10), // 위쪽 간격 추가
+                const SizedBox(height: 5), // 위쪽 간격 추가
                 if (icon != null) ...[
                   IconButton(
                     icon: Icon(icon),
@@ -58,26 +58,30 @@ class RandomtextCustomButton extends StatelessWidget {
                   ),
                   const SizedBox(height: 0.1), // 아이콘과 텍스트 사이의 간격
                 ],
-                Text(
-                  text,
-                  style: TextStyle(
-                    color: textColor ?? Colors.white,
-                    fontSize: 21,
-                    fontWeight: FontWeight.bold,
+                Flexible(
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      color: textColor ?? Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 const Spacer(), // 아래 텍스트를 아래쪽으로 밀기 위한 Spacer
-                Text(
-                  "Random\nPost",
-                  style: TextStyle(
-                    color: Colors.black, // 검은색 텍스트
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3), // 텍스트 아래쪽 간격 추가
+                  child: Text(
+                    "Random\nPost",
+                    style: TextStyle(
+                      color: Colors.black, // 검은색 텍스트
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 3), // 아래쪽 간격 추가
               ],
             ),
           ),

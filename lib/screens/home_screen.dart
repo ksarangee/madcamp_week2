@@ -246,7 +246,6 @@ class _HomeScreenState extends State<HomeScreen>
                       crossAxisSpacing: 16,
                       children: [
                         TrendCustomButton(
-                          text: 'Trending\nPosts',
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -257,7 +256,6 @@ class _HomeScreenState extends State<HomeScreen>
                           },
                         ),
                         InterestCustomButton(
-                          text: 'My\nInterests',
                           onPressed: () {
                             Navigator.push(
                               context,

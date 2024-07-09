@@ -63,7 +63,8 @@ class _InterestPostsScreenState extends State<InterestPostsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text('My Interests')),
+      appBar:
+          AppBar(title: Text('My Interests'), backgroundColor: Colors.white),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(

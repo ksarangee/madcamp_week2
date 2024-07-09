@@ -34,7 +34,8 @@ class _TrendScreenState extends State<TrendScreen> {
             data.map((doc) => Document.fromJson(doc)).toList();
 
         // Sort documents by todayViews in descending order
-        documents.sort((a, b) => (b.todayViews ?? 0).compareTo(a.todayViews ?? 0));
+        documents
+            .sort((a, b) => (b.todayViews ?? 0).compareTo(a.todayViews ?? 0));
 
         //트렌드 글 10개만 보여주기
         documents = documents.take(_maxDocuments).toList();
@@ -58,7 +59,9 @@ class _TrendScreenState extends State<TrendScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Trending Posts')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          title: const Text('Trending Posts'), backgroundColor: Colors.white),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _errorMessage.isNotEmpty
