@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         fontFamily: "IBMPlexSansKR",
-        primaryColor: const Color(0xFF42312A),
+        //primaryColor: const Color(0xFF42312A),
         useMaterial3: true,
       ),
       home: FutureBuilder<bool>(
@@ -100,13 +100,12 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.white,
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        selectedIconTheme: const IconThemeData(color: Color(0xFF42312A)),
+        selectedIconTheme: const IconThemeData(color: Colors.black),
         selectedLabelStyle: const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF42312A)),
-        showSelectedLabels: true, // 선택된 라벨 보이기/숨기기
-        showUnselectedLabels: false, // 선택되지 않은 라벨 보이기/숨기기
+            fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
+        selectedItemColor: Colors.black,
+        showSelectedLabels: true, // 선택된 라벨 보이기
+        showUnselectedLabels: false, // 선택되지 않은 라벨 숨기기
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset('assets/icons/browse_icon.svg'),

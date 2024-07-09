@@ -103,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('$userNickname님 반가워요!'),
+        title: Text('$userNickname님\n 반가워요!'),
       ),
       body: ListView(
         children: [
@@ -231,7 +231,9 @@ class _LikedPostsScreenState extends State<LikedPostsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text('내가 좋아요 한 글'),
       ),
       body: ListView.builder(
