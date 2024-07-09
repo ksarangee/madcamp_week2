@@ -1,5 +1,5 @@
 // interest_posts_screen.dart
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -44,7 +44,9 @@ class _InterestPostsScreenState extends State<InterestPostsScreen> {
 
   Future<void> _fetchInterestPosts() async {
     try {
-      final userId = 3; // TODO: 실제 사용자 ID로 교체
+      // final userId = 3; // TODO: 실제 사용자 ID로 교체
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('userId');
       final response =
           await http.get(Uri.parse('$backendUrl/get_interests/$userId'));
 

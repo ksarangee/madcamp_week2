@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../secret.dart'; // backendUrl을 포함
 import 'edit_document_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DocumentDetailScreen extends StatefulWidget {
   final Document document;
@@ -22,26 +23,37 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
   int dislikes = 0;
   bool hasLiked = false;
   bool hasDisliked = false;
-  List<String> comments = [];
+  List<Map<String, dynamic>> comments = []; // 댓글 목록을 Map으로 변경
   TextEditingController commentController = TextEditingController();
   bool _isLoading = true; // 로딩 상태를 나타내는 변수
-  final int userId = 3; // 실제 사용자 ID로 대체
+  late int userId; // 사용자 ID
 
   @override
   void initState() {
     super.initState();
     _document = widget.document;
-    Future.microtask(() async {
-      await _incrementPostView();
-      await _fetchDocument();
-      await _fetchReactions();
-      await _fetchComments();
-      if (mounted) {
-        setState(() {
-          _isLoading = false; // 데이터 로드 완료 후 로딩 상태 해제
-        });
-      }
-    });
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userId') ?? 0; // 기본값을 0으로 설정하거나 적절한 기본값으로 변경
+    if (userId != 0) {
+      Future.microtask(() async {
+        await _incrementPostView();
+        await _fetchDocument();
+        await _fetchReactions();
+        await _fetchComments();
+        if (mounted) {
+          setState(() {
+            _isLoading = false; // 데이터 로드 완료 후 로딩 상태 해제
+          });
+        }
+      });
+    } else {
+      print('User ID not found in SharedPreferences');
+      // 사용자 ID가 없을 경우의 처리
+    }
   }
 
   @override
@@ -138,8 +150,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         final data = jsonDecode(response.body);
         if (mounted) {
           setState(() {
-            comments = List<String>.from(
-                data.map((comment) => comment['comment_text']));
+            comments = List<Map<String, dynamic>>.from(data);
           });
         }
       } else {
@@ -262,6 +273,57 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
     } catch (e) {
       print('Error adding comment: $e');
     }
+  }
+
+  Future<void> _deleteComment(int commentId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$backendUrl/delete_comment'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'comment_id': commentId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // 댓글 삭제 후 댓글 목록을 새로고침합니다.
+        await _fetchComments();
+      } else {
+        // 에러 처리
+        print('Failed to delete comment');
+      }
+    } catch (e) {
+      print('Error deleting comment: $e');
+    }
+  }
+
+  void _confirmDeleteComment(int commentId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('댓글 삭제'),
+          content: Text('댓글을 삭제하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteComment(commentId);
+              },
+              child: Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   String getCategoryName(int categoryId) {
@@ -537,8 +599,17 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: comments.length,
                           itemBuilder: (context, index) {
+                            final comment = comments[index];
                             return ListTile(
-                              title: Text(comments[index]),
+                              title: Text(comment['comment_text']),
+                              trailing: comment['user_id'] == userId
+                                  ? IconButton(
+                                      icon: Icon(Icons.close),
+                                      onPressed: () {
+                                        _confirmDeleteComment(comment['id']);
+                                      },
+                                    )
+                                  : null,
                             );
                           },
                         ),
