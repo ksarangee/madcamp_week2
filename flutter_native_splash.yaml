@@ -1,0 +1,12 @@
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/tidbits_splash.png
+
+  android_12:
+    image: assets/images/tidbits_splash.png
+    color: "#FFFFFF"
+
+  # 플랫폼별로 설정을 끄고 싶지 않으면 아래 주석을 유지합니다.
+  # android: false
+  # ios: false
+  # web: false

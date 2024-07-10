@@ -117,47 +117,39 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE0CBB4),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: Colors.white,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Stack(
               fit: StackFit.expand,
               children: [
                 Positioned(
-                  top: MediaQuery.of(context).size.height * 0.01,
+                  top: MediaQuery.of(context).size.height * 0.25,
                   left: 0,
                   right: 0,
-                  child: const Column(
-                    children: [
-                      Text(
-                        '손 끝에서 시작되는\n지식의 조각들,',
-                        style: TextStyle(
-                          color: Color(0xFF350B08),
-                          fontSize: 32,
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w300,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 8), //위 text와 간격
-                      Text(
-                        'tidbits',
-                        style: TextStyle(
-                          color: Color(0xFF350B08),
-                          fontSize: 40,
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
+                  child: const Text(
+                    '손 끝에서 시작되는\n지식의 조각들,',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontFamily: 'IBMPlexSansKR',
+                      fontWeight: FontWeight.w300,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Center(
+                  child: SizedBox(
+                    width:
+                        MediaQuery.of(context).size.width * 0.3, // 화면 너비의 60%
+                    child: Image.asset(
+                      'assets/images/tidbitslogo.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
                 Positioned(
-                  top: MediaQuery.of(context).size.height * 0.3, // 여기를 추가
+                  bottom: MediaQuery.of(context).size.height * 0.1,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -167,23 +159,26 @@ class LoginScreenState extends State<LoginScreen> {
                         backgroundColor: const Color(0xFFEEC981),
                         side: const BorderSide(color: Colors.brown, width: 2),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 15),
+                            horizontal: 20, vertical: 15),
                       ),
-                      child: const Text(
-                        'Start with Kakao',
-                        style: TextStyle(
-                            color: Color(0xFF350B08), fontFamily: 'NotoSansKR'),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            'assets/images/kakaologo.png',
+                            height: 24, // 텍스트 크기에 맞춰 조정
+                            width: 24, // 텍스트 크기에 맞춰 조정
+                          ),
+                          const SizedBox(width: 10), // 로고와 텍스트 사이 간격
+                          const Text(
+                            'Start with Kakao',
+                            style: TextStyle(
+                                color: Color(0xFF350B08),
+                                fontFamily: 'IBMPlexSansKR'),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Image.asset(
-                    'assets/below_cookie.png',
-                    fit: BoxFit.fitWidth,
                   ),
                 ),
               ],
