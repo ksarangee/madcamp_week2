@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         duration: 1500,
       ),
-      //initialRoute: '/home',
+      initialRoute: '/home',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const MyHomePage(),

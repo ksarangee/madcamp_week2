@@ -385,6 +385,7 @@ class _DocumentDetailScreenState extends State<DocumentDetailScreen> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: Colors.white,
               title: Text('신고'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
