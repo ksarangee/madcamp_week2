@@ -199,100 +199,97 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 100,
-                    child: AnimatedOpacity(
-                      opacity: isVisible ? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 500),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            quotes[currentQuoteIndex]['quote']!,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              //fontStyle: FontStyle.italic,
-                              color: Color(0xFF42312A),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            quotes[currentQuoteIndex]['author']!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF42312A),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 99, 16, 16), // 상단 패딩을 늘림
+          child: Column(
+            children: [
+              //Spacer(flex: 0), // 상단 공간을 늘림
+              SizedBox(
+                height: 100,
+                child: AnimatedOpacity(
+                  opacity: isVisible ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        quotes[currentQuoteIndex]['quote']!,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
+                      SizedBox(height: 8),
+                      Text(
+                        quotes[currentQuoteIndex]['author']!,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF42312A),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 30),
-                  Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      children: [
-                        TrendCustomButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TrendScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        InterestCustomButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => InterestPostsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        TodaytextCustomButton(
-                          text: '$fixedDocumentTitle',
-                          onPressed: () => _fetchFixedDocument(),
-                        ),
-                        RandomtextCustomButton(
-                          text: randomDocumentTitle,
-                          onPressed: () {
-                            if (randomDocument != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DocumentDetailScreen(
-                                    document: randomDocument!,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          icon: Icons.refresh,
-                          iconOnPressed: _fetchRandomDocument,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 30), // 간격을 늘림
+              Expanded(
+                flex: 3, // 그리드뷰의 비율을 조정
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  children: [
+                    TrendCustomButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TrendScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    InterestCustomButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InterestPostsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    TodaytextCustomButton(
+                      text: '$fixedDocumentTitle',
+                      onPressed: () => _fetchFixedDocument(),
+                    ),
+                    RandomtextCustomButton(
+                      text: randomDocumentTitle,
+                      onPressed: () {
+                        if (randomDocument != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DocumentDetailScreen(
+                                document: randomDocument!,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      icon: Icons.refresh,
+                      iconOnPressed: _fetchRandomDocument,
+                    ),
+                  ],
+                ),
+              ),
+              Spacer(flex: 1), // 하단 공간을 늘림
+            ],
+          ),
         ),
       ),
     );

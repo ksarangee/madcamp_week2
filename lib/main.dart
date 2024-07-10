@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,19 +38,32 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.black,
         useMaterial3: true,
       ),
-      home: FutureBuilder<bool>(
-        future: checkLoginStatus(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData && snapshot.data!) {
-            return const MyHomePage();
-          } else {
-            return const LoginScreen();
-          }
-        },
+      home: AnimatedSplashScreen(
+        splash: Transform.scale(
+          scale: 2.2,
+          child: Image.asset(
+            'assets/images/tidbitslogo.png',
+            fit: BoxFit.contain,
+            //width: MediaQuery.of(context).size.width * 0.8,
+          ),
+        ), // 여기에서 원하는 스플래시 아이콘이나 이미지를 사용하세요.
+        nextScreen: FutureBuilder<bool>(
+          future: checkLoginStatus(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData && snapshot.data!) {
+              return const MyHomePage();
+            } else {
+              return const LoginScreen();
+            }
+          },
+        ),
+        splashTransition: SplashTransition.fadeTransition,
+        backgroundColor: Colors.white,
+        duration: 1500,
       ),
-      initialRoute: '/login',
+      //initialRoute: '/home',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const MyHomePage(),

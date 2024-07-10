@@ -55,7 +55,7 @@ class TodaytextCustomButton extends StatelessWidget {
                   color: Colors.black, // 하얀색으로 설정
                   size: 23, // 아이콘 크기 설정
                 ),
-                const SizedBox(height: 12), // 아이콘과 텍스트 사이의 간격
+                const SizedBox(height: 14), // 아이콘과 텍스트 사이의 간격
 
                 Flexible(
                   child: Text(

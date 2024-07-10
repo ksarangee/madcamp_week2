@@ -213,7 +213,7 @@ class _EditDocumentScreenState extends State<EditDocumentScreen> {
                         alignLabelWithHint: true,
                         border: InputBorder.none,
                       ),
-                      maxLines: 16,
+                      maxLines: 25,
                       keyboardType: TextInputType.multiline,
                     ),
                     if (_image != null) Image.file(_image!),
@@ -227,7 +227,7 @@ class _EditDocumentScreenState extends State<EditDocumentScreen> {
             ),
             Positioned(
               left: 15,
-              bottom: 3,
+              bottom: 4,
               child: Row(
                 children: [
                   IconButton(
