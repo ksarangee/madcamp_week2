@@ -54,8 +54,8 @@ KAIST 전산학부 19학번 김동연 <a href="https://github.com/doongyeon" tar
 - 상단 오른쪽의 신고 버튼을 이용해 부적절한 내용이 있다면 글을 신고할 수 있습니다.
 - 상단 오른쪽의 편집 버튼으로 누구나 글을 수정할 수 있습니다.
 
-<img width="300" src="https://github.com/ksarangee/madcampW2_fe/assets/161582130/35843e58-3789-4b9c-b393-9e2d6f1087f6">
-<img width="300" src="https://github.com/ksarangee/madcampW2_fe/assets/161582130/eb69a0e1-a909-492f-93c0-d22ff53a5345">
+<img width="250" src="https://github.com/ksarangee/madcampW2_fe/assets/161582130/35843e58-3789-4b9c-b393-9e2d6f1087f6">
+<img width="250" src="https://github.com/ksarangee/madcampW2_fe/assets/161582130/eb69a0e1-a909-492f-93c0-d22ff53a5345">
 
 
 ### 5️⃣ 글 작성, 편집 페이지
