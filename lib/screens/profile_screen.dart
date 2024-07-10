@@ -54,8 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _saveInterestsToServer() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
-    int? userId = 3; // 임시로 3로 설정
+    int? userId = prefs.getInt('userId'); // 유저 ID를 SharedPreferences에서 가져옵니다.
+    // int? userId = 3; // 임시로 3로 설정
     if (userId == null) return;
 
     final response = await http.post(
@@ -216,7 +216,8 @@ class _LikedPostsScreenState extends State<LikedPostsScreen> {
 
   Future<void> _fetchLikedPosts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? userId = 3; // 임시로 3으로 설정, 실제로는 SharedPreferences에서 가져옴
+    int? userId = prefs.getInt('userId');
+    // int? userId = 3; // 임시로 3으로 설정, 실제로는 SharedPreferences에서 가져옴
     if (userId == null) return;
 
     final response = await http.get(
