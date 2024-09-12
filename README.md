@@ -13,7 +13,7 @@ KAIST 전산학부 19학번 김동연 <a href="https://github.com/doongyeon" tar
 
 **IDE** : Visual Studio Code
 
-**Back-end** : Flask
+**Back-end** : Flask ( 백엔드 리포: [BE](https://github.com/doongyeon/madcampweek2_be) )
 
 **DB** : MySQL
 
